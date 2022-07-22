@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+   
+<head>
+  <meta charset="utf-8">
+  <title> <%= titulo %> </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('partials/head') %>
+</head>
+
+<body>
+  <header class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <img src="img/finca.jpg" alt="Home" class="rounded-pill w-25">
+        <p class="my-1 fw-bold">
+            Enquestes de la comunitat
+        </p>
+        <%- include('partials/navigations') %>
+        <%- include('partials/footer') %>
+    </div>
+</header>
+
+<script src="/javascript/index.js"> </script>
+</body>
+</html>
