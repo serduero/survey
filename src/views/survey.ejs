@@ -8,36 +8,162 @@
   <%- include('partials/head') %>
 </head>
 
-<body>
+<body> 
   <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="card bg-dark textw-white text-center">
         <div class="card-hearder">
-            <h3>
-                Enquesta de...
+            <!-- Título de la encuesta -->
+            <h3 class="mt-1">
+                <%= valores[0].enc_tit %>
             </h3>
+
+            <!-- Observaciones -->
+            <% if(valores[0].enc_obs != ''){ %>
+                <div class="container mb-1">
+                    <i style="color:grey">
+                        <%= valores[0].enc_obs %>
+                    </i>
+                </div>
+            <% } %>
         </div>
+
         <div class="card-body text-start">
-            <div class="form">
-
-                <div class="mb-3">
-                    <label for="email">Correo</label>
-                    <input type="email" placeholder="Correu electrònic" class="form-control">
+            <form action="" method="post" id="formulario">
+                <div class="alert alert-danger mt-1 d-none" role="alert" id="msgerr">Missatge error</div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    data-bs-toggle="dropdown" id="bloc">
+                    Bloc</button>
+                    <div class="dropdown-menu" id="listbloc">
+                    <a class="dropdown-item" data-pdsa-dropdown-val="12C" href="#">12C</a>
+                    <a class="dropdown-item" data-pdsa-dropdown-val="14B" href="#">14B</a>
+                    <a class="dropdown-item" data-pdsa-dropdown-val="16A" href="#">16A</a>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="message">Missatge</label>
-                    <textarea name="message" rows="3" class="form-control" placeholder="Escriu missatge"></textarea>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    data-bs-toggle="dropdown" id="pis">
+                    Pis</button>
+                    <div class="dropdown-menu" id="listpis">
+                    <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
+                    <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
+                    <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                    </div>
                 </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    data-bs-toggle="dropdown" id="porta">
+                    Porta</button>
+                    <div class="dropdown-menu" id="listporta">
+                    <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
+                    <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
+                    <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                    </div>
+                </div>
+                <!-- Preguntas -->
+                <% valores.forEach(function(pregunta) { %>
 
-            </div>
-            <button class="btn btn-primary btn-block" type="submit">Enviar</button>
+                    <div class="pregunta" tagpregunta="<%= pregunta.pre_num %>">
+                        <li class="mt-4 mb-2"> <%= pregunta.pre_txt %></li>
+
+                        <% if(pregunta.pre_nop>1){ %>
+                            <!--
+                                Checkbox si hay más de una opción a seleccionar
+                            -->
+                            <%- include('partials/checkbox', {valor: '0', texto: pregunta.res_va0,
+                            enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <%- include('partials/checkbox', {valor: '1', texto: pregunta.res_va1,
+                            enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+
+                            <% if(pregunta.res_va2 != null){ %>
+                                <%- include('partials/checkbox', {valor: '2', texto: pregunta.res_va2,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va3 != null){ %>
+                                <%- include('partials/checkbox', {valor: '3', texto: pregunta.res_va3,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va4 != null){ %>
+                                <%- include('partials/checkbox', {valor: '4', texto: pregunta.res_va4,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va5 != null){ %>
+                                <%- include('partials/checkbox', {valor: '5', texto: pregunta.res_va5,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va6 != null){ %>
+                                <%- include('partials/checkbox', {valor: '6', texto: pregunta.res_va6,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va7 != null){ %>
+                                <%- include('partials/checkbox', {valor: '7', texto: pregunta.res_va7,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va8 != null){ %>
+                                <%- include('partials/checkbox', {valor: '8', texto: pregunta.res_va8,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                            <% if(pregunta.res_va9 != null){ %>
+                                <%- include('partials/checkbox', {valor: '9', texto: pregunta.res_va9,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% } %>
+                        <% } else { %>
+                            <!--
+                                Radiobutton si sólo hay una opción a seleccionar 
+                            -->
+                            <%- include('partials/radiobutton', {valor: '0', texto: pregunta.res_va0,
+                            enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <%- include('partials/radiobutton', {valor: '1', texto: pregunta.res_va1,
+                            enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                                
+                            <% if(pregunta.res_va2 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '2', texto: pregunta.res_va2,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va3 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '3', texto: pregunta.res_va3,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va4 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '4', texto: pregunta.res_va4,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va5 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '5', texto: pregunta.res_va5,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va6 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '6', texto: pregunta.res_va6,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va7 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '7', texto: pregunta.res_va7,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va8 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '8', texto: pregunta.res_va8,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                            <% if(pregunta.res_va9 != null){ %>
+                                <%- include('partials/radiobutton', {valor: '9', texto: pregunta.res_va9,
+                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                            <% } %>
+                        <% } %>
+                    </div>
+                <% }); %> 
+                <button type="submit" class="btn btn-primary btn-block mt-4">Enviar</button>
+            </form>
         </div>
-
     </div>
-
   </div>
 
-
+  <!-- Opción de volver -->
   <%- include('partials/tornar') %>
   <script src="/javascript/survey.js"> </script>
+
+  <!-- Bootstrap JS -->  
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+
 </body>
 </html>

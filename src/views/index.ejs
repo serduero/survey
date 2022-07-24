@@ -11,15 +11,25 @@
 <body>
   <header class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="d-flex flex-column justify-content-center align-items-center">
-        <img src="finca.jpg" alt="Home" class="rounded-pill w-25">
-        <p class="my-1 fw-bold">
+        <img src="img/finca.JPG" alt="Home" class="rounded-pill w-25">
+        <p class="my-1 fw-bold my-3">
             Enquestes de la comunitat
         </p>
-        <%- include('partials/navigations') %>
+        <% if(hay){ %>
+          <%- include('partials/navsurvey') %>
+        <% } else {%>  
+          <div class="alert alert-success my-4" role="alert">
+            No n'hi ha enquestes actualment..
+          </div>
+        <% } %>
+
+        <% if(navPasw){ %>
+          <%- include('partials/navpassw') %>
+        <% } %>
+         
         <%- include('partials/footer') %>
     </div>
 </header>
 
-<script src="/javascript/index.js"> </script>
 </body>
 </html>
