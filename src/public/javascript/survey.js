@@ -10,10 +10,23 @@ $(function () {
         event.preventDefault();
         
         // Validamos bloque, piso y puerta informados y ok's
-        var strbloc = $("#bloc").html().trim();
-        var strpis = $("#pis").html().trim();
-        var strporta = $("#porta").html().trim();
+        var strplaza = $('#plaza').length ? $("#plaza").val().trim() : '';
+        
+        var strbloc =  $('#bloc').length ?
+                         $("#bloc").html().trim() :
+                         $('#blocfix').length ?
+                           $("#blocfix").html().trim() :
+                           '';
 
+        var strpis =  $('#pis').length ? $("#pis").html().trim() : '';
+        var strporta =  $('#porta').length ? $("#porta").html().trim() : '';
+
+        // console.log(strplaza);
+        // console.log(strbloc);
+        // console.log(strpis);
+        // console.log(strporta);
+
+        // Validamos bloque, piso y puerta se han informado en caso de estar
         if( strbloc == 'Bloc') {
             $("#msgerr").html('No informat el Bloc');
             $("#msgerr").removeClass('d-none').addClass('d-block');
@@ -26,6 +39,52 @@ $(function () {
             } else {
                 if( strporta == 'Porta') {
                     $("#msgerr").html('No informada la Porta');
+                    $("#msgerr").removeClass('d-none').addClass('d-block');
+                    return false;
+                }
+            }
+        }
+
+        // Validamos que se haya indicado una plaza de parking y sea correcta
+        if ($('#plaza').length) {
+            if (strplaza == '') {
+                $("#msgerr").html('No informada la plaça de parking');
+                $("#msgerr").removeClass('d-none').addClass('d-block');
+                return false;
+            } else {
+                if (isNaN(parseFloat(strplaza)) || !isFinite(strplaza)) {
+                    $("#msgerr").html('Plaça de parking incorrecta');
+                    $("#msgerr").removeClass('d-none').addClass('d-block');
+                    return false;
+                } else {
+                    // Validamos posibles decimanles
+                    const num_dec = parseFloat(strplaza);
+                    const num_int = parseInt(strplaza);
+                    if (num_dec != num_int) {
+                        $("#msgerr").html('Número de plaça de parking incorrecte');
+                        $("#msgerr").removeClass('d-none').addClass('d-block');
+                        return false;
+                    } else {
+                        // Y que sea un número OK
+                        if (num_int < 1 || num_int > 77) {
+                            $("#msgerr").html('Plaça de parking inexistent');
+                            $("#msgerr").removeClass('d-none').addClass('d-block');
+                            return false;
+                        }
+                    }
+                }
+            }
+        } else {
+            // Validamos la coherencia entre bloque y piso
+            if (strbloc == '2A' || strbloc == '2B') {
+                if (strpis == 'B') {
+                    $("#msgerr").html('No hi ha baixos en aquest Bloc');
+                    $("#msgerr").removeClass('d-none').addClass('d-block');
+                    return false;
+                }
+            } else {
+                if (strpis == '4' || strpis == '5') {
+                    $("#msgerr").html('Solament hi ha 3 pisos en aquest Bloc');
                     $("#msgerr").removeClass('d-none').addClass('d-block');
                     return false;
                 }
@@ -131,7 +190,7 @@ $(function () {
         }
         
         // Hay alguna pregunta sin contestar
-        if (hayError != -1) { 
+        if (hayError != -1) {
             // Un elemento por cada valor distinto
             const distinctPregs = [...new Set(pregunta)];
              
@@ -149,10 +208,12 @@ $(function () {
         }
 
         // Todo OK: enviamos las respuestas
+        // console.log('se envía: ' + strbloc + ' ' + strpis + ' ' + strporta + ' '+ strplaza);
+         
         $.ajax({
             url : '/insform',
             type: 'POST',
-            data: JSON.stringify([encuesta, strbloc, strpis, strporta]),
+            data: JSON.stringify([encuesta, strbloc, strpis, strporta, strplaza]),
             contentType: "application/json",
             // dataType   : "json",
             success    : function(resp) {

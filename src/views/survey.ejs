@@ -30,36 +30,89 @@
         <div class="card-body text-start">
             <form action="" method="post" id="formulario">
                 <div class="alert alert-danger mt-1 d-none" role="alert" id="msgerr">Missatge error</div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                    data-bs-toggle="dropdown" id="bloc">
-                    Bloc</button>
-                    <div class="dropdown-menu" id="listbloc">
-                    <a class="dropdown-item" data-pdsa-dropdown-val="12C" href="#">12C</a>
-                    <a class="dropdown-item" data-pdsa-dropdown-val="14B" href="#">14B</a>
-                    <a class="dropdown-item" data-pdsa-dropdown-val="16A" href="#">16A</a>
+
+                <!-- Ponemos el bloque si la encuensta es sólo de uno -->
+                <% if(valores[0].enc_com.substr(0,1) == 'B') { %>
+                    <p class="container d-flex justify-content-center align-items-center"
+                       id="blocfix" value="<%= valores[0].enc_com.substr(1,3) %>">
+                        <%= valores[0].enc_com.substr(1,3) %> </p>
+                <% } %>
+
+                <% if(valores[0].enc_com == 'P'){ %>
+                <!-- Cuando es de parking ponemos tecleo numérico -->
+                    <div class="form-group mt-3">
+                        <input type="tel" class="form-control" id="plaza" placeholder="Indiqui plaça">
+                        <small id="plazaHelp" class="form-text text-muted">Indiqui la seva plaça de parking.</small>
                     </div>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                    data-bs-toggle="dropdown" id="pis">
-                    Pis</button>
-                    <div class="dropdown-menu" id="listpis">
-                    <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
-                    <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
-                    <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+
+                <% } else if(valores[0].enc_com == 'M') { %>
+                    <!-- Desplegables posibles cuando es de mancocomunidad -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-toggle="dropdown" id="bloc">
+                        Bloc</button>
+                        <div class="dropdown-menu" id="listbloc">
+                        <a class="dropdown-item" data-pdsa-dropdown-val="12C" href="#">12C</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="14B" href="#">14B</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="16A" href="#">16A</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="2A"  href="#">2A</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="2B"  href="#">2B</a>
+                        </div>
                     </div>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                    data-bs-toggle="dropdown" id="porta">
-                    Porta</button>
-                    <div class="dropdown-menu" id="listporta">
-                    <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
-                    <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
-                    <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-toggle="dropdown" id="pis">
+                        Pis</button>
+                        <div class="dropdown-menu" id="listpis">
+                        <a class="dropdown-item" data-pdsa-dropdown-val="B" href="#">Bajos</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="4" href="#">4</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="5" href="#">5</a>
+                        </div>
                     </div>
-                </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        data-bs-toggle="dropdown" id="porta">
+                        Porta</button>
+                        <div class="dropdown-menu" id="listporta">
+                        <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
+                        <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                        </div>
+                    </div>
+                    <% } else { %>
+                        <!-- Desplegables posibles cuando es de una escalera determinada-->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            data-bs-toggle="dropdown" id="pis">
+                            Pis</button>
+                            <div class="dropdown-menu" id="listpis">
+                            <% if(valores[0].enc_com == 'B12C' || valores[0].enc_com == 'B14B' || valores[0].enc_com == 'B16A') { %>
+                                <a class="dropdown-item" data-pdsa-dropdown-val="B" href="#">Bajos</a>
+                            <% } %>
+                            <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
+                            <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
+                            <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                            <% if(valores[0].enc_com == 'B2A' || valores[0].enc_com == 'B2B') { %>
+                                <a class="dropdown-item" data-pdsa-dropdown-val="4" href="#">4</a>
+                                <a class="dropdown-item" data-pdsa-dropdown-val="5" href="#">5</a>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            data-bs-toggle="dropdown" id="porta">
+                            Porta</button>
+                            <div class="dropdown-menu" id="listporta">
+                            <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
+                            <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
+                            <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
+                            </div>
+                        </div>
+                    <% } %>
+
                 <!-- Preguntas -->
                 <% valores.forEach(function(pregunta) { %>
 

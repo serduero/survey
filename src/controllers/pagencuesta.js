@@ -34,6 +34,7 @@ const putSurvey = (req, res) => {
     `select enc.id as             enc_num,
             enc.titulo as         enc_tit,
             enc.observaciones as  enc_obs,
+            enc.comunidad as      enc_com,
 
             preg.id as            pre_num,
             preg.texto as         pre_txt,
@@ -53,6 +54,7 @@ const putSurvey = (req, res) => {
 
             from encuesta enc, pregunta preg, respuesta resp
     where enc.inicio<=${ahora} and enc.fin>=${ahora}
+      and enc.activa = 'S'
       and enc.id = preg.encuesta
       and preg.id = resp.pregunta
     `;
