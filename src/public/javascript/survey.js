@@ -4,6 +4,12 @@ $(function () {
         treureMsg();
     });
 
+    $(".helpi").each(function(){
+        $(this).on('click', function() {
+            alert($(this).attr('valor'));
+        });
+    });
+    
     // Enviar formulario tras validarlo
     $("form").on("submit", function( event ) {
 
