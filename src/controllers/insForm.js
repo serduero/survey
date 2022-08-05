@@ -116,7 +116,7 @@ const insForm = (req, res) => {
   */
 
   // Miramos si la encuesta recibida es la activa
-  var sql = `select * from encuesta where inicio<=${ahora} and fin>=${ahora}`;
+  var sql = `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa = "S"`;
   // console.log(sql);
 
   // Lanzamos query y revisamos resultado
@@ -210,7 +210,7 @@ const insForm = (req, res) => {
         // borramos los posibles valores previos si los hubiera
         sql = `delete from respvecino where encuesta=${dato_encuesta} and piso="${dato_elpiso}"`;
 
-        console.log(sql);
+        // console.log(sql);
         connection.query(sql, (error, results) => {
           if (error) throw error;
 

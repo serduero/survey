@@ -54,7 +54,7 @@ const putSurvey = (req, res) => {
 
             from encuesta enc, pregunta preg, respuesta resp
     where enc.inicio<=${ahora} and enc.fin>=${ahora}
-      and enc.activa = 'S'
+      and enc.activa = "S"
       and enc.id = preg.encuesta
       and preg.id = resp.pregunta
     `;

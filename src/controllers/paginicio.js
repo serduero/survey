@@ -30,7 +30,7 @@ const getSurvey = (req, res) => {
   const ahora = obtenerAhora();
 
   // Miramos si hay encuestas activas hoy
-  var sql = `select * from encuesta where inicio<=${ahora} and fin>=${ahora}`;
+  var sql = `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa="S"`;
   // console.log(sql);
 
   // Lanzamos query y revisamos resultado
