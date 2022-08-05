@@ -225,9 +225,7 @@ $(function () {
             success    : function(resp) {
                 alert('Enquesta enviada');
                 if (resp == '') {
-                    window.close();
-                    // window.location.replace("/");
-
+                    window.location.replace("/");
                 } else {
                     $("#msgerr").html(resp);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
