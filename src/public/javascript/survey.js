@@ -225,7 +225,9 @@ $(function () {
             success    : function(resp) {
                 alert('Enquesta enviada');
                 if (resp == '') {
-                    window.location.replace("/");
+                    window.close();
+                    // window.location.replace("/");
+
                 } else {
                     $("#msgerr").html(resp);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
@@ -237,8 +239,30 @@ $(function () {
 
     // Se selecciona un elemento de la lista bloc
     $("#listbloc a").on("click", function () {
+        // Se pone el seleccionado
         var id = $(this).data('pdsa-dropdown-val');
         $("#bloc").html(id);
+
+        // En caso de que haya un piso seleccionado y no exista se reinicia con "Pis"
+        // En cualquier caso se oculta para que no sea seleccionable
+
+        // 2A y 2B no tienen bajos
+        if (id == '2A' || id == '2B') {
+            if ($("#pis").html() == 'B') {
+                $("#pis").html('Pis');
+            };
+            $("#lbajos").hide();
+            $("#lcuatro").show();
+            $("#lcinco").show();
+        } else {
+        // El resto sólo tienen 3 alturas
+            if ($("#pis").html() == '4' || $("#pis").html() == '5') {
+                $("#pis").html('Pis');
+            };
+            $("#lbajos").show();
+            $("#lcuatro").hide();
+            $("#lcinco").hide();
+        }
     });
     $("#listpis a").on("click", function () {
         var id = $(this).data('pdsa-dropdown-val');

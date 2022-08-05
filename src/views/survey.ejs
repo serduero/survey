@@ -18,13 +18,13 @@
             <form action="" method="post" id="formulario">
             
                 <!-- Título de la encuesta -->
-                <h3 class="mt-1">
+                <h3 class="container d-flex justify-content-center align-items-center mt-1">
                     <%= valores[0].enc_tit %>
                 </h3>
 
                 <!-- Observaciones -->
                 <% if(valores[0].enc_obs != ''){ %>
-                    <div class="container mb-1">
+                    <div class="container d-flex justify-content-center align-items-center mb-1">
                         <i style="color:grey">
                             <%= valores[0].enc_obs %>
                         </i>
@@ -64,12 +64,12 @@
                         data-bs-toggle="dropdown" id="pis">
                         Pis</button>
                         <div class="dropdown-menu" id="listpis">
-                        <a class="dropdown-item" data-pdsa-dropdown-val="B" href="#">Bajos</a>
+                        <a class="dropdown-item" id="lbajos" data-pdsa-dropdown-val="B" href="#">Bajos</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
-                        <a class="dropdown-item" data-pdsa-dropdown-val="4" href="#">4</a>
-                        <a class="dropdown-item" data-pdsa-dropdown-val="5" href="#">5</a>
+                        <a class="dropdown-item" id="lcuatro" data-pdsa-dropdown-val="4" href="#">4</a>
+                        <a class="dropdown-item" id="lcinco" data-pdsa-dropdown-val="5" href="#">5</a>
                         </div>
                     </div>
                     <div class="btn-group">
