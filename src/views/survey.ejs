@@ -119,6 +119,10 @@
                     <div class="pregunta" tagpregunta="<%= pregunta.pre_num %>">
                         
                         <li class="mt-4 mb-2"> <%= pregunta.pre_txt %>
+                            <% if(pregunta.pre_nop >1) { %>
+                                </br>
+                                <p class="small" style="color:grey"><em>Selecciona <%= pregunta.pre_nop %> opcions</em></p>
+                            <% } %>
                             <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
                                 <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
                             <% } %>

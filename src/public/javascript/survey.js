@@ -215,9 +215,18 @@ $(function () {
 
         // Todo OK: enviamos las respuestas
         // console.log('se envía: ' + strbloc + ' ' + strpis + ' ' + strporta + ' '+ strplaza);
-         
+
+        var idurl = getUrlParameter('idurl');
+
+        if (idurl == false) {
+            $("#msgerr").html('Adreça desconeguda.. què has fet?');
+            $("#msgerr").removeClass('d-none').addClass('d-block');
+            return false;
+        }
+        
+        var url = `/insform/&idurl=${idurl}`;
         $.ajax({
-            url : '/insform',
+            url : url,
             type: 'POST',
             data: JSON.stringify([encuesta, strbloc, strpis, strporta, strplaza]),
             contentType: "application/json",
@@ -277,5 +286,17 @@ function treureMsg() {
     $("#msgerr").removeClass('d-block').addClass('d-none');
 }
 
-
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.pathname,
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return false;
+};
     

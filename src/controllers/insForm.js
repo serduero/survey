@@ -1,4 +1,7 @@
 import mysql from 'mysql';
+import { getUrlParameter, obtenerAhora } from './funciones.js';
+import { database } from './database.js';
+
 const { createConnection } = mysql;
 
 /*
@@ -82,6 +85,14 @@ const insForm = (req, res) => {
 
   const datos = req.body[0];
 
+  let idurl = getUrlParameter('idurl',req.url);
+
+  if (idurl === false) {
+     // mostramos pantalla de no encuestas
+     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false});
+     return;
+  }
+
   // console.log('quien      : ' + req.body[1] + req.body[2] + req.body[3] + plaza_parking);
   // console.log('id encuesta: ' + datos.id);
   // console.log('id preguntas : ' + datos.pregunta);
@@ -89,12 +100,12 @@ const insForm = (req, res) => {
   // console.log('id respuestas: ' + datos.respuestas);
   // console.log('respuestas   : ' + datos.respondido);
 
-  const database = {
-    host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
-    user:  "u2svqk5ihhqfkfab",
-    password: "QmEr4Kh7yrgGcH0nKFcw",
-    database: "b5s1p7ubh0ujcnb6jdxc",
-  };
+  // const database = {
+  //   host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
+  //   user:  "u2svqk5ihhqfkfab",
+  //   password: "QmEr4Kh7yrgGcH0nKFcw",
+  //   database: "b5s1p7ubh0ujcnb6jdxc",
+  // };
 
   /*
   const database =
@@ -116,7 +127,8 @@ const insForm = (req, res) => {
   */
 
   // Miramos si la encuesta recibida es la activa
-  var sql = `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa = "S"`;
+  var sql =
+  `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa="S" and idurl="${idurl}"`;
   // console.log(sql);
 
   // Lanzamos query y revisamos resultado
@@ -164,8 +176,9 @@ const insForm = (req, res) => {
       and enc.activa = 'S'
       and enc.id = preg.encuesta
       and preg.id = resp.pregunta
+      and enc.idurl = "${idurl}"
     `;
-
+    
     var tipo_encuesta = '';
 
     connection.query(sql, (error, results) => {
@@ -247,19 +260,6 @@ const insForm = (req, res) => {
       }
     });
   });
-}
-
-// Obtiene la fecha del servidor en AAAAMMDD (en número)
-function obtenerAhora() {
-  let date_ob = new Date();
-
-  let date = ('0' + date_ob.getDate()).slice(-2);
-  let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
-  let year = date_ob.getFullYear();
-
-  let fecha = parseInt(year + month + date);
-  
-  return fecha;
 }
 
 export default insForm;

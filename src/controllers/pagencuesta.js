@@ -1,4 +1,7 @@
 import mysql from 'mysql';
+import { getUrlParameter, obtenerAhora } from './funciones.js';
+import { database } from './database.js';
+ 
 const { createConnection } = mysql;
 
 /*
@@ -7,12 +10,12 @@ const { createConnection } = mysql;
 
 const putSurvey = (req, res) => {
 
-  const database = {
-    host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
-    user:  "u2svqk5ihhqfkfab",
-    password: "QmEr4Kh7yrgGcH0nKFcw",
-    database: "b5s1p7ubh0ujcnb6jdxc",
-  };
+  // const database = {
+  //   host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
+  //   user:  "u2svqk5ihhqfkfab",
+  //   password: "QmEr4Kh7yrgGcH0nKFcw",
+  //   database: "b5s1p7ubh0ujcnb6jdxc",
+  // };
 
   /*
   const database =
@@ -20,6 +23,13 @@ const putSurvey = (req, res) => {
     host: process.env.DATABASE_HOST,user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,database: process.env.DATABASE_NAME,
   };*/
+  var idurl = getUrlParameter('idurl',req.url);
+
+  if (idurl === false) {
+     // mostramos pantalla de no encuestas
+     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false});
+     return;
+  }
 
   // Conectamos con la base de datos
   const connection = createConnection({
@@ -57,6 +67,7 @@ const putSurvey = (req, res) => {
       and enc.activa = "S"
       and enc.id = preg.encuesta
       and preg.id = resp.pregunta
+      and enc.idurl = "${idurl}"
     `;
   // console.log(sql);
 
@@ -76,19 +87,6 @@ const putSurvey = (req, res) => {
     }
   });
   connection.end();
-}
-
-// Obtiene la fecha del servidor en AAAAMMDD (en número)
-function obtenerAhora() {
-  let date_ob = new Date();
-
-  let date = ('0' + date_ob.getDate()).slice(-2);
-  let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
-  let year = date_ob.getFullYear();
-
-  let fecha = parseInt(year + month + date);
-  
-  return fecha;
 }
 
 export default putSurvey;

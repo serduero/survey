@@ -1,4 +1,7 @@
 import mysql from 'mysql';
+import { getUrlParameter, obtenerAhora } from './funciones.js';
+import { database } from './database.js';
+
 const { createConnection } = mysql;
 
 /*
@@ -6,20 +9,26 @@ const { createConnection } = mysql;
 */
 
 const getSurvey = (req, res) => {
-
-  const database = {
-    host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
-    user:  "u2svqk5ihhqfkfab",
-    password: "QmEr4Kh7yrgGcH0nKFcw",
-    database: "b5s1p7ubh0ujcnb6jdxc",
-  };
-
+  // const database = {
+  //   host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
+  //   user:  "u2svqk5ihhqfkfab",
+  //   password: "QmEr4Kh7yrgGcH0nKFcw",
+  //   database: "b5s1p7ubh0ujcnb6jdxc",
+  // };
   /*
   const database =
   {
     host: process.env.DATABASE_HOST,user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,database: process.env.DATABASE_NAME,
   };*/
+
+  var idurl = getUrlParameter('idurl',req.url);
+
+  if (idurl === false) {
+    // mostramos pantalla de no encuestas
+    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false});
+    return;
+  }
 
   // Conectamos con la base de datos
   const connection = createConnection({
@@ -30,7 +39,8 @@ const getSurvey = (req, res) => {
   const ahora = obtenerAhora();
 
   // Miramos si hay encuestas activas hoy
-  var sql = `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa="S"`;
+  var sql =
+  `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa="S" and idurl="${idurl}"`;
   // console.log(sql);
 
   // Lanzamos query y revisamos resultado
@@ -42,26 +52,13 @@ const getSurvey = (req, res) => {
     
     if (results.length > 0) {
       // mostramos acceso a la encuesta (hay datos)
-      res.render('index', {titulo: 'Principal', navPasw: false, hay: true});
+      res.render('index', {titulo: 'Principal', idurl: idurl, navPasw: false, hay: true});
     } else {
       // mostramos pantalla de no encuestas
-      res.render('index', {titulo: 'Sense enquestes actives', navPasw: false, hay: false});
+      res.render('index', {titulo: 'Sense enquestes', navPasw: false, hay: false});
     }
   });
   connection.end();
-}
-
-// Obtiene la fecha del servidor en AAAAMMDD (en número)
-function obtenerAhora() {
-  let date_ob = new Date();
-
-  let date = ('0' + date_ob.getDate()).slice(-2);
-  let month = ('0' + (date_ob.getMonth() + 1)).slice(-2);
-  let year = date_ob.getFullYear();
-
-  let fecha = parseInt(year + month + date);
-  
-  return fecha;
 }
 
 export default getSurvey;
