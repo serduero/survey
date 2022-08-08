@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+   
+<head>
+  <meta charset="utf-8">
+  <title> <%= titulo %> </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('partials/head') %>
+</head>
+
+<body>
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="card bg-dark textw-white text-center">
+        <% if(!hay){ %>
+            <!-- Si no hay resultados -->
+            <div class="card-hearder mt-5">
+                <h3>
+                    Sense resultats ...
+                </h3>
+            </div>
+        <% } else { %>
+            <div class="card-hearder mt-5 mb-2">
+                <h3>
+                    Resultats ...
+                </h3>
+            </div>
+            <!-- listamos todos los valores obtenidos -->
+
+            <div class="card bg-dark textw-white text-start">
+                <% results.forEach(function(pregunta) { %>
+                    <!-- texto de la pregunta -->
+                    <span class="container ml-3 mr-3 bg-primary text-white rounded">
+                        <p class="mt-1 mb-2"> <%= pregunta.txt_preg %>  </li>
+                    </span>
+
+                    <!-- respuestas con el valor actual -->
+                    <% pregunta.respuesta.forEach(function(item,index){ %>
+                        <div class="d-flex flex-row bd-highlight mb-1 justify-content-between bg-info text-black rounded">
+                            <div class="p-2 m-0 bd-highlight"> <%= item %></div>
+                            <div class="p-2 m-0 bd-highlight h3"> <%= pregunta.num_resps[index] %> </div>
+                        </div>
+                    <% }) %>
+
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+  </div>
+
+  <%- include('partials/tornar') %>
+  <script src="/javascript/survey.js"> </script>
+</body>
+</html>

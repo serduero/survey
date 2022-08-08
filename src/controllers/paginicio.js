@@ -9,24 +9,12 @@ const { createConnection } = mysql;
 */
 
 const getSurvey = (req, res) => {
-  // const database = {
-  //   host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
-  //   user:  "u2svqk5ihhqfkfab",
-  //   password: "QmEr4Kh7yrgGcH0nKFcw",
-  //   database: "b5s1p7ubh0ujcnb6jdxc",
-  // };
-  /*
-  const database =
-  {
-    host: process.env.DATABASE_HOST,user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,database: process.env.DATABASE_NAME,
-  };*/
 
   var idurl = getUrlParameter('idurl',req.url);
 
   if (idurl === false) {
     // mostramos pantalla de no encuestas
-    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false});
+    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N'});
     return;
   }
 
@@ -52,10 +40,10 @@ const getSurvey = (req, res) => {
     
     if (results.length > 0) {
       // mostramos acceso a la encuesta (hay datos)
-      res.render('index', {titulo: 'Principal', idurl: idurl, navPasw: false, hay: true});
+      res.render('index', {titulo: 'Principal', idurl: idurl, navPasw: false, hay: true, visible: results[0].visible});
     } else {
       // mostramos pantalla de no encuestas
-      res.render('index', {titulo: 'Sense enquestes', navPasw: false, hay: false});
+      res.render('index', {titulo: 'Sense enquestes', navPasw: false, hay: false, visible: 'N'});
     }
   });
   connection.end();

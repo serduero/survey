@@ -89,7 +89,7 @@ const insForm = (req, res) => {
 
   if (idurl === false) {
      // mostramos pantalla de no encuestas
-     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false});
+     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N'});
      return;
   }
 
@@ -99,20 +99,6 @@ const insForm = (req, res) => {
   // console.log('num opciones : ' + datos.numopciones);
   // console.log('id respuestas: ' + datos.respuestas);
   // console.log('respuestas   : ' + datos.respondido);
-
-  // const database = {
-  //   host: "b5s1p7ubh0ujcnb6jdxc-mysql.services.clever-cloud.com",
-  //   user:  "u2svqk5ihhqfkfab",
-  //   password: "QmEr4Kh7yrgGcH0nKFcw",
-  //   database: "b5s1p7ubh0ujcnb6jdxc",
-  // };
-
-  /*
-  const database =
-  {
-    host: process.env.DATABASE_HOST,user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,database: process.env.DATABASE_NAME,
-  };*/
 
   // Conectamos con la base de datos
   const connection = createConnection({

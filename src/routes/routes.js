@@ -7,6 +7,7 @@ import putSurvey from '../controllers/pagencuesta.js';
 import chgPassw from '../controllers/pagpassw.js';
 import insForm from '../controllers/insForm.js';
 import inicio from '../controllers/inicio.js';
+import getResults from '../controllers/results.js';
 
 // Página principal
 router.get('/:parms', getSurvey);
@@ -19,6 +20,9 @@ router.get('/password', chgPassw);
 
 // Insertar formulario
 router.post('/insform/:parms', insForm);
+
+// Resultados actuales
+router.get('/results/:parms', getResults);
 
 // Página tras contestar
 router.get('/', inicio);
