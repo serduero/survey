@@ -13,7 +13,7 @@ import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// definimos la ruta dondes están todos los archivos. con join no tenemos que mirar si / o \ (por el S.O.)
+// definimos la ruta donde están todos los archivos. con join no tenemos que mirar si / o \ (por el S.O.)
 server.set('views', join(__dirname, 'views'));
 
 // definimos el motor de plantillas

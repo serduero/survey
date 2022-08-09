@@ -17,31 +17,45 @@ const insForm = (req, res) => {
   var plaza_parking = '';
   var missatge = '';
 
+  let idurl = getUrlParameter('idurl',req.url);
+  var idioma = getUrlParameter('id',req.url);
+
+  if (idurl === false || (idioma != 1 && idioma != 0)) {
+     // mostramos pantalla de no encuestas
+     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N', idioma: 0});
+     return;
+  }
+
   // console.log(req.body);
 
   // Validamos el bloque, piso, puerta y plaza parking
 
   // Incompatibles entre sí
+  var errortxt1 = idioma == 0 ? 'Error: inesperat' : 'Error inesperado';
+  var errortxt2 = idioma == 0 ? 'Plaça de parking incorrecta' : 'Plaza de parking incorrecta';
+  var errortxt3 = idioma == 0 ? 'Número de plaça de parking incorrecte' : 'Número de plaza de parking incorrecto';
+  var errortxt4 = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
+
   if (req.body[4] != '') {
     if (req.body[1] != '' || req.body[2] != '' || req.body[3] != '') {
-      missatge = 'Error: inesperat ' + req.body[4] + ' ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];
+      missatge = errortxt1 + ' ' + req.body[4] + ' ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];
       actualizar = false;
     } else {
       // Validamos el número del parking
       if (isNaN(parseFloat(req.body[4])) || !isFinite(req.body[4])) {
-          missatge = 'Plaça de parking incorrecta';
+          missatge = errortxt2;
           actualizar = false;
       } else {
           // Validamos posibles decimanles
           const num_dec = parseFloat(req.body[4]);
           const num_int = parseInt(req.body[4]);
           if (num_dec != num_int) {
-              missatge = 'Número de plaça de parking incorrecte';
+              missatge = errortxt3;
               actualizar = false;
           } else {
               // Y que sea un número OK
               if (num_int < 1 || num_int > 77) {
-                  missatge = 'Plaça de parking inexistent';
+                  missatge = errortxt4;
                   actualizar = false;
               } else {
                 plaza_parking = req.body[4] + '';
@@ -50,29 +64,36 @@ const insForm = (req, res) => {
       }
     }
   } else {
+    errortxt1 = idioma == 0 ? 'Error: No està el bloc' : 'Error: No está el bloque';
+    errortxt2 = idioma == 0 ? 'Error: No està el pis' : 'Error: No está el piso';
+    errortxt3 = idioma == 0 ? 'Error: No està la porta' : 'Error: No está la puerta';
+     
     // Si no hay parking miramos los valores ok's de bloque, piso y puerta
     if (!bloques.includes(req.body[1])) {
-      missatge = 'Error: No está el bloque ' + req.body[1];
+      missatge = errortxt1 + ' ' + req.body[1];
       actualizar = false;
     }
     if (!pisos.includes(req.body[2])) {
-      missatge = 'Error: No está el piso ' + req.body[2];
+      missatge = errortxt2 + ' ' + req.body[2];
       actualizar = false;
     }
     if (!puertas.includes(req.body[3])) {
-      missatge = 'Error: No está la puerta ' + req.body[3];
+      missatge = errortxt3 + ' ' + req.body[3];
       actualizar = false;
     }
+
+    errortxt1 = idioma == 0 ? 'Error: No hi ha baixos en aquest Bloc' : 'Error: No hay bajos en este Bloque';
+    errortxt2 = idioma == 0 ? 'Error: Solament hi ha 3 pisos en aquest Bloc' : 'Error: Solamente hay 3 pisos en este Bloque';
 
     // Y la coherencia entre bloque y piso
     if (req.body[1] == '2A' || req.body[1] == '2B') {
       if (req.body[2] == 'B') {
-          missatge = 'Error: No hi ha baixos en aquest Bloc ' + req.body[1] + ' ' + req.body[2];
+          missatge = errortxt1 + ' ' + req.body[1] + ' ' + req.body[2];
           actualizar = false;
       }
     } else {
         if (req.body[2] == '4' || req.body[2] == '5') {
-            missatge = 'Error: Solament hi ha 3 pisos en aquest Bloc ' + req.body[1] + ' ' + req.body[2];
+            missatge = errortxt2 + ' ' + req.body[1] + ' ' + req.body[2];
             actualizar = false;
         }
     }
@@ -84,14 +105,6 @@ const insForm = (req, res) => {
   }
 
   const datos = req.body[0];
-
-  let idurl = getUrlParameter('idurl',req.url);
-
-  if (idurl === false) {
-     // mostramos pantalla de no encuestas
-     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N'});
-     return;
-  }
 
   // console.log('quien      : ' + req.body[1] + req.body[2] + req.body[3] + plaza_parking);
   // console.log('id encuesta: ' + datos.id);
@@ -127,11 +140,11 @@ const insForm = (req, res) => {
     if (results.length > 0) {
       if (results[0].id != datos.id) {
         actualizar = false;
-        missatge = 'Enquesta rebuda inesperada';  
+        missatge = idioma == 0 ? 'Enquesta rebuda inesperada' : 'Encuesta recibida inesperada';  
       }
     } else {
       actualizar = false;
-      missatge = 'Cap enquesta activa';
+      missatge = idioma == 0 ? 'Cap enquesta activa' : 'Ninguna encuesta activa';
     }
     // console.log('2 ? ' + actualizar + ' ' + missatge);
 
@@ -179,17 +192,18 @@ const insForm = (req, res) => {
 
         if (objeto_res.pre_num != datos.pregunta[0]) {
            actualizar = false;
-           missatge = 'No coincideixen les preguntes';  
+           missatge = idioma == 0 ? 'No coincideixen les preguntes' : 'No coinciden las preguntas';  
         } else {
           // Si es de parking no debe venir más que la plaza
           if (tipo_encuesta == 'P' && (req.body[1] != '' || req.body[2] != '' || req.body[3] != '' || plaza_parking == '')) {
             actualizar = false;
-            missatge = 'Enquesta rebuda no correcta ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];  
+            errortxt1 = idioma == 0 ? 'Enquesta rebuda no és correcta' : 'Encuesta recibida no es correcta';
+            missatge = errortxt1 + ' ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];  
           }
         }
       } else {
          actualizar = false;
-         missatge = 'Sense preguntes actives';
+         missatge = idioma == 0 ? 'Sense preguntes actives' : 'Sin preguntas activas';
       }
 
       // Si todo ha ido bien, actualizamos la BBDDs
@@ -235,12 +249,14 @@ const insForm = (req, res) => {
             }
           }
           connection.end();
-           
+
           res.send('');
         });
       } else {
-        connection.end();
+        // Si no actualizar
          
+        connection.end();
+
         res.send(missatge);
         return missatge;
       }

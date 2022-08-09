@@ -42,7 +42,13 @@
                 <!-- Cuando es de parking ponemos tecleo numérico -->
                     <div class="form-group mt-3">
                         <input type="tel" class="form-control" id="plaza" placeholder="Indiqui plaça">
-                        <small id="plazaHelp" class="form-text text-muted">Indiqui la seva plaça de parking.</small>
+                        <small id="plazaHelp" class="form-text text-muted">
+                            <% if(idioma == 0){ %>
+                                Indiqui la seva plaça de parking.
+                            <% } else {%>  
+                                Indique su plaza de parking.
+                            <% } %>
+                        </small>
                     </div>
 
                 <% } else if(valores[0].enc_com == 'M') { %>
@@ -50,7 +56,12 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-toggle="dropdown" id="bloc">
-                        Bloc</button>
+                            <% if(idioma == 0){ %>
+                                Bloc
+                            <% } else {%>  
+                                Bloque
+                            <% } %>
+                        </button>
                         <div class="dropdown-menu" id="listbloc">
                         <a class="dropdown-item" data-pdsa-dropdown-val="12C" href="#">12C</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="14B" href="#">14B</a>
@@ -62,9 +73,20 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-toggle="dropdown" id="pis">
-                        Pis</button>
+                            <% if(idioma == 0){ %>
+                                Pis
+                            <% } else {%>  
+                                Piso
+                            <% } %>
+                        </button>
                         <div class="dropdown-menu" id="listpis">
-                        <a class="dropdown-item" id="lbajos" data-pdsa-dropdown-val="B" href="#">Bajos</a>
+                        <a class="dropdown-item" id="lbajos" data-pdsa-dropdown-val="B" href="#">
+                            <% if(idioma == 0){ %>
+                                Baixos
+                            <% } else {%>  
+                                Bajos
+                            <% } %>
+                        </a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="3" href="#">3</a>
@@ -75,7 +97,12 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         data-bs-toggle="dropdown" id="porta">
-                        Porta</button>
+                            <% if(idioma == 0){ %>
+                                Porta
+                            <% } else {%>  
+                                Puerta
+                            <% } %>
+                        </button>
                         <div class="dropdown-menu" id="listporta">
                         <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
                         <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
@@ -87,10 +114,21 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             data-bs-toggle="dropdown" id="pis">
-                            Pis</button>
+                                <% if(idioma == 0){ %>
+                                    Pis
+                                <% } else {%>  
+                                    Piso
+                                <% } %>    
+                            </button>
                             <div class="dropdown-menu" id="listpis">
                             <% if(valores[0].enc_com == 'B12C' || valores[0].enc_com == 'B14B' || valores[0].enc_com == 'B16A') { %>
-                                <a class="dropdown-item" data-pdsa-dropdown-val="B" href="#">Bajos</a>
+                                <a class="dropdown-item" data-pdsa-dropdown-val="B" href="#">
+                                    <% if(idioma == 0){ %>
+                                        Baixos
+                                    <% } else {%>  
+                                        Bajos
+                                    <% } %>
+                                </a>
                             <% } %>
                             <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
                             <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
@@ -104,7 +142,12 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             data-bs-toggle="dropdown" id="porta">
-                            Porta</button>
+                                <% if(idioma == 0){ %>
+                                    Porta
+                                <% } else {%>  
+                                    Puerta
+                                <% } %>
+                            </button>
                             <div class="dropdown-menu" id="listporta">
                             <a class="dropdown-item" data-pdsa-dropdown-val="1" href="#">1</a>
                             <a class="dropdown-item" data-pdsa-dropdown-val="2" href="#">2</a>
@@ -121,7 +164,8 @@
                         <li class="mt-4 mb-2"> <%= pregunta.pre_txt %>
                             <% if(pregunta.pre_nop >1) { %>
                                 </br>
-                                <p class="small" style="color:grey"><em>Selecciona <%= pregunta.pre_nop %> opcions</em></p>
+                                <p class="small" style="color:grey"><em>
+                                    Selecciona <%= pregunta.pre_nop %> <% if(idioma == 0){ %>opcions<% } else {%>opciones<% } %></em></p>
                             <% } %>
                             <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
                                 <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
@@ -222,7 +266,7 @@
   </div>
 
   <!-- Opción de volver -->
-  <%- include('partials/tornar') %>
+  <%- include('partials/tornar', {idioma: idioma}) %>
   <script src="/javascript/survey.js"> </script>
 
   <!-- Bootstrap JS -->  

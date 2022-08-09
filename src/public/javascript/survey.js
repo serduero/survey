@@ -1,9 +1,22 @@
 // DOM cargado
 $(function () {
+
+    // obtenemos los parámetros de idurl de la encuesta y su idioma
+    var idurl = getUrlParameter('idurl');
+    var idioma = getUrlParameter('id');
+
+    if ((idurl == false) || (idioma != 1 && idioma != 2)) {
+        $("#msgerr").html('Adreça desconeguda.. què has fet?');
+        $("#msgerr").removeClass('d-none').addClass('d-block');
+        return false;
+    }
+             
+    // Quitamos mensaje de error ante cualquier click
     $(document).on('click', function(){
         treureMsg();
     });
 
+    // En caso de pulsar "+info" mostramos las observaciones en una alerta
     $(".helpi").each(function(){
         $(this).on('click', function() {
             alert($(this).attr('valor'));
@@ -32,19 +45,23 @@ $(function () {
         // console.log(strpis);
         // console.log(strporta);
 
+        var msgtxt = idioma == 0 ? 'No informat el Bloc' : 'No informado el Bloque';
+
         // Validamos bloque, piso y puerta se han informado en caso de estar
-        if( strbloc == 'Bloc') {
-            $("#msgerr").html('No informat el Bloc');
+        if( strbloc == 'Bloc' || strbloc == 'Bloque') {
+            $("#msgerr").html(msgtxt);
             $("#msgerr").removeClass('d-none').addClass('d-block');
             return false;
         } else {
-            if( strpis == 'Pis') {
-                $("#msgerr").html('No informat el Pis');
+            if( strpis == 'Pis' || strpis == 'Piso') {
+                msgtxt = idioma == 0 ? 'No informat el Pis' : 'No informado el Piso';
+                $("#msgerr").html(msgtxt);
                 $("#msgerr").removeClass('d-none').addClass('d-block');
                 return false;
             } else {
-                if( strporta == 'Porta') {
-                    $("#msgerr").html('No informada la Porta');
+                if( strporta == 'Porta' || strporta == 'Puerta') {
+                    msgtxt = idioma == 0 ? 'No informada la Porta' : 'No informada la Puerta';
+                    $("#msgerr").html(msgtxt);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
                     return false;
                 }
@@ -54,12 +71,14 @@ $(function () {
         // Validamos que se haya indicado una plaza de parking y sea correcta
         if ($('#plaza').length) {
             if (strplaza == '') {
-                $("#msgerr").html('No informada la plaça de parking');
+                msgtxt = idioma == 0 ? 'No informada la plaça de parking' : 'No informada la plaza de parking';
+                $("#msgerr").html(msgtxt);
                 $("#msgerr").removeClass('d-none').addClass('d-block');
                 return false;
             } else {
                 if (isNaN(parseFloat(strplaza)) || !isFinite(strplaza)) {
-                    $("#msgerr").html('Plaça de parking incorrecta');
+                    msgtxt = idioma == 0 ? 'Plaça de parking incorrecta' : 'Plaza de parking incorrecta';
+                    $("#msgerr").html(msgtxt);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
                     return false;
                 } else {
@@ -67,13 +86,15 @@ $(function () {
                     const num_dec = parseFloat(strplaza);
                     const num_int = parseInt(strplaza);
                     if (num_dec != num_int) {
-                        $("#msgerr").html('Número de plaça de parking incorrecte');
+                        msgtxt = idioma == 0 ? 'Número de plaça de parking incorrecta' : 'Número de plaza de parking incorrecta';
+                        $("#msgerr").html(msgtxt);
                         $("#msgerr").removeClass('d-none').addClass('d-block');
                         return false;
                     } else {
                         // Y que sea un número OK
                         if (num_int < 1 || num_int > 77) {
-                            $("#msgerr").html('Plaça de parking inexistent');
+                            msgtxt = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
+                            $("#msgerr").html(msgtxt);
                             $("#msgerr").removeClass('d-none').addClass('d-block');
                             return false;
                         }
@@ -84,13 +105,15 @@ $(function () {
             // Validamos la coherencia entre bloque y piso
             if (strbloc == '2A' || strbloc == '2B') {
                 if (strpis == 'B') {
-                    $("#msgerr").html('No hi ha baixos en aquest Bloc');
+                    msgtxt = idioma == 0 ? 'No hi ha baixos en aquest Bloc' : 'No hay bajos en aquest Bloque';
+                    $("#msgerr").html(msgtxt);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
                     return false;
                 }
             } else {
                 if (strpis == '4' || strpis == '5') {
-                    $("#msgerr").html('Solament hi ha 3 pisos en aquest Bloc');
+                    msgtxt = idioma == 0 ? 'Solament hi ha 3 pisos en aquest Bloc' : 'Solamente hay pisos en este Bloque';
+                    $("#msgerr").html(msgtxt);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
                     return false;
                 }
@@ -202,12 +225,16 @@ $(function () {
              
             if (!por_numero) {
                 if (distinctPregs.length>1) {
-                    $("#msgerr").html('Respondre totes les preguntes');
+                    msgtxt = idioma == 0 ? 'Respondre totes les preguntes' : 'Responder todas las preguntas';
+                    $("#msgerr").html(msgtxt);
                 } else {
-                    $("#msgerr").html('Respondre a la pregunta');
+                    msgtxt = idioma == 0 ? 'Respondre a la pregunta' : 'Responder a la pregunta';
+                    $("#msgerr").html(msgtxt);
                 }
             } else {
-                $("#msgerr").html('No coincideix el nombre de respostes amb el demanat');
+                msgtxt = idioma == 0 ? 'No coincideix el nombre de respostes amb el demanat' :
+                                       'No coincide el número de respuestas con lo pedido';
+                $("#msgerr").html(msgtxt);
             }
             $("#msgerr").removeClass('d-none').addClass('d-block');
             return false;
@@ -215,16 +242,11 @@ $(function () {
 
         // Todo OK: enviamos las respuestas
         // console.log('se envía: ' + strbloc + ' ' + strpis + ' ' + strporta + ' '+ strplaza);
-
-        var idurl = getUrlParameter('idurl');
-
-        if (idurl == false) {
-            $("#msgerr").html('Adreça desconeguda.. què has fet?');
-            $("#msgerr").removeClass('d-none').addClass('d-block');
-            return false;
-        }
         
-        var url = `/insform/&idurl=${idurl}`;
+        var url = `/insform/&idurl=${idurl}&id=${idioma}`;
+        
+        // console.log(url);
+
         $.ajax({
             url : url,
             type: 'POST',
@@ -232,9 +254,11 @@ $(function () {
             contentType: "application/json",
             // dataType   : "json",
             success    : function(resp) {
-                alert('Enquesta enviada');
+                let txt = idioma == 0 ? 'Enquesta enviada':'Encuesta enviada';
+
+                alert(txt);
                 if (resp == '') {
-                    window.location.replace("/");
+                    window.location.replace(`/fi/&id=${idioma}`);
                 } else {
                     $("#msgerr").html(resp);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
@@ -250,13 +274,15 @@ $(function () {
         var id = $(this).data('pdsa-dropdown-val');
         $("#bloc").html(id);
 
-        // En caso de que haya un piso seleccionado y no exista se reinicia con "Pis"
+        // En caso de que haya un piso seleccionado y no exista se reinicia con "Piso"
         // En cualquier caso se oculta para que no sea seleccionable
+
+        let piso = idioma == 0 ? 'Pis' : 'Piso';
 
         // 2A y 2B no tienen bajos
         if (id == '2A' || id == '2B') {
             if ($("#pis").html() == 'B') {
-                $("#pis").html('Pis');
+                $("#pis").html(piso);
             };
             $("#lbajos").hide();
             $("#lcuatro").show();
@@ -264,7 +290,7 @@ $(function () {
         } else {
         // El resto sólo tienen 3 alturas
             if ($("#pis").html() == '4' || $("#pis").html() == '5') {
-                $("#pis").html('Pis');
+                $("#pis").html(piso);
             };
             $("#lbajos").show();
             $("#lcuatro").hide();
@@ -272,10 +298,12 @@ $(function () {
         }
     });
     $("#listpis a").on("click", function () {
+        // Se pone el seleccionado
         var id = $(this).data('pdsa-dropdown-val');
         $("#pis").html(id);
     });
     $("#listporta a").on("click", function () {
+        // Se pone el seleccionado
         var id = $(this).data('pdsa-dropdown-val');
         $("#porta").html(id);
     });

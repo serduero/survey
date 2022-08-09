@@ -15,13 +15,21 @@
             <!-- Si no hay resultados -->
             <div class="card-hearder mt-5">
                 <h3>
-                    Sense resultats ...
+                    <% if(idioma == 0){ %>
+                        Sense resultats ...
+                    <% } else {%>  
+                        Sin resultados ...
+                    <% } %>
                 </h3>
             </div>
         <% } else { %>
             <div class="card-hearder mt-5 mb-2">
                 <h3>
-                    Resultats ...
+                    <% if(idioma == 0){ %>
+                        Resultats ...
+                    <% } else {%>  
+                        Resultados ...
+                    <% } %>
                 </h3>
             </div>
             <!-- listamos todos los valores obtenidos -->
@@ -47,7 +55,7 @@
     </div>
   </div>
 
-  <%- include('partials/tornar') %>
+  <%- include('partials/tornar', {idioma: idioma}) %>
   <script src="/javascript/survey.js"> </script>
 </body>
 </html>

@@ -13,13 +13,17 @@
     <div class="d-flex flex-column justify-content-center align-items-center">
         <img src="img/finca.JPG" alt="Home" class="rounded-pill w-25">
         <p class="my-1 fw-bold my-3">
+          <% if(idioma == 0){ %>
             Enquestes de la comunitat
+          <% } else {%>  
+            Encuestas de la comunidad
+          <% } %>
         </p>
         <% if(hay){ %>
-          <%- include('partials/navsurvey', {idurl: idurl}) %>
+          <%- include('partials/navsurvey', {idurl: idurl, idioma: idioma}) %>
 
           <% if(visible == 'S'){ %>
-            <%- include('partials/navresul', {idurl: idurl}) %>  
+            <%- include('partials/navresul', {idurl: idurl, idioma: idioma}) %>  
           <% } %>
 
         <% } else {%>  
@@ -29,10 +33,10 @@
         <% } %>
 
         <% if(navPasw){ %>
-          <%- include('partials/navpassw') %>
+          <%- include('partials/navpassw', {idioma: idioma}) %>
         <% } %>
          
-        <%- include('partials/footer') %>
+        <%- include('partials/footer', {idioma: idioma}) %>
     </div>
 </header>
 

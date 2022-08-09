@@ -11,10 +11,11 @@ const { createConnection } = mysql;
 const getResults = (req, res) => {
 
   var idurl = getUrlParameter('idurl',req.url);
+  var idioma = getUrlParameter('id',req.url);
 
-  if (idurl === false) {
+  if (idurl === false || (idioma != 1 && idioma != 0)) {
     // mostramos pantalla de no encuestas
-    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N'});
+    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N', idioma: 0});
     return;
   }
 
@@ -145,9 +146,9 @@ const getResults = (req, res) => {
         // console.log(codigos);
 
         // mostramos los resultados
-        res.render('results', {titulo: 'Resultats', hay: true, results: codigos});
+        res.render('results', {titulo: 'Resultats', hay: true, results: codigos, idioma: idioma});
     } else {
-        res.render('results', {titulo: 'Sense resultats', hay: false});
+        res.render('results', {titulo: 'Sense resultats', hay: false, idioma: idioma});
     }
   });
   connection.end();

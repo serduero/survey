@@ -1,3 +1,9 @@
 <div class="container d-flex justify-content-center align-items-center">
-    <a href="/" class="btn btn-secondary btn-sm my-3 w-25">Tornar</a>
+    <a href="/fi/&id=<%= idioma %>" class="btn btn-secondary btn-sm my-3 w-25">
+        <% if(idioma == 0){ %>
+            Tornar
+        <% } else {%>  
+            Volver
+        <% } %>
+    </a>
 </div>

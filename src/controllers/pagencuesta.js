@@ -11,10 +11,11 @@ const { createConnection } = mysql;
 const putSurvey = (req, res) => {
 
   var idurl = getUrlParameter('idurl',req.url);
+  var idioma = getUrlParameter('id',req.url);
 
-  if (idurl === false) {
+  if (idurl === false || (idioma != 1 && idioma != 0)) {
      // mostramos pantalla de no encuestas
-     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N'});
+     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N', idioma: 0});
      return;
   }
 
@@ -67,10 +68,11 @@ const putSurvey = (req, res) => {
     
     if (results.length > 0) {
       // mostramos acceso a la encuesta (hay datos)
-      res.render('survey', {titulo: 'Enquesta', valores: results});
+      let titulo = idioma == 0 ? 'Enquesta' : 'Encuesta';
+      res.render('survey', {titulo: titulo, valores: results, idioma: idioma});
     } else {
       // mostramos pantalla de no encuestas
-      res.render('index', {titulo: 'Sense enquestes actives', navPasw: false, hay: false, visible: 'N'});
+      res.render('index', {titulo: 'Sense enquestes actives', navPasw: false, hay: false, visible: 'N', idioma: 0});
     }
   });
   connection.end();

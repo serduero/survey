@@ -25,6 +25,6 @@ router.post('/insform/:parms', insForm);
 router.get('/results/:parms', getResults);
 
 // Página tras contestar
-router.get('/', inicio);
+router.get('/fi/:parms', inicio);
 
 export default router;
