@@ -5,7 +5,7 @@ $(function () {
     var idurl = getUrlParameter('idurl');
     var idioma = getUrlParameter('id');
 
-    if ((idurl == false) || (idioma != 1 && idioma != 2)) {
+    if ((idurl == false) || (idioma != 0 && idioma != 1)) {
         $("#msgerr").html('Adreça desconeguda.. què has fet?');
         $("#msgerr").removeClass('d-none').addClass('d-block');
         return false;
