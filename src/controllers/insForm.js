@@ -10,6 +10,8 @@ const { createConnection } = mysql;
 
 const insForm = (req, res) => {
 
+  // console.log('en insForm');
+
   var actualizar = true;
   const bloques = ['2A', '2B', '12C', '14B', '16A'];
   const pisos = ['B', '1', '2', '3', '4', '5'];
@@ -26,7 +28,11 @@ const insForm = (req, res) => {
      return;
   }
 
-  // console.log(req.body);
+  // console.log(req.body[0]);
+  // console.log(req.body[1]);
+  // console.log(req.body[2]);
+  // console.log(req.body[3]);
+  // console.log(req.body[4]);
 
   // Validamos el bloque, piso, puerta y plaza parking
 
@@ -37,6 +43,7 @@ const insForm = (req, res) => {
   var errortxt4 = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
 
   if (req.body[4] != '') {
+    // Si número de parking informado es de parking. Validamos todos los campos de comunidad parking
     if (req.body[1] != '' || req.body[2] != '' || req.body[3] != '') {
       missatge = errortxt1 + ' ' + req.body[4] + ' ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];
       actualizar = false;
@@ -64,6 +71,7 @@ const insForm = (req, res) => {
       }
     }
   } else {
+    // Si número de parking no informado es que no es de parking. Validamos todos los campos de comunidad no parking
     errortxt1 = idioma == 0 ? 'Error: No està el bloc' : 'Error: No está el bloque';
     errortxt2 = idioma == 0 ? 'Error: No està el pis' : 'Error: No está el piso';
     errortxt3 = idioma == 0 ? 'Error: No està la porta' : 'Error: No está la puerta';
@@ -104,6 +112,7 @@ const insForm = (req, res) => {
     return missatge;
   }
 
+  // en datos recogemos los datos de la entrada
   const datos = req.body[0];
 
   // console.log('quien      : ' + req.body[1] + req.body[2] + req.body[3] + plaza_parking);
@@ -149,6 +158,7 @@ const insForm = (req, res) => {
     // console.log('2 ? ' + actualizar + ' ' + missatge);
 
     // Miramos si coincide o no el id de la últ pregunta con la recibida
+    // una fila por cada pregunta de la encuesta (no se mira las respuestas)
     sql =  `select enc.id as      enc_num,
             enc.titulo as         enc_tit,
             enc.observaciones as  enc_obs,
@@ -157,40 +167,36 @@ const insForm = (req, res) => {
             preg.id as            pre_num,
             preg.texto as         pre_txt,
             preg.num_opciones as  pre_nop,
-            preg.observaciones as pre_obs,
+            preg.observaciones as pre_obs
 
-            resp.valor0 as        res_va0,
-            resp.valor1 as        res_va1,
-            resp.valor2 as        res_va2,
-            resp.valor3 as        res_va3,
-            resp.valor4 as        res_va4,
-            resp.valor5 as        res_va5,
-            resp.valor6 as        res_va6,
-            resp.valor7 as        res_va7,
-            resp.valor8 as        res_va8,
-            resp.valor9 as        res_va9
-
-            from encuesta enc, pregunta preg, respuesta resp
+            from encuesta enc, pregunta preg
     where enc.inicio<=${ahora} and enc.fin>=${ahora}
       and enc.activa = 'S'
-      and enc.id = preg.encuesta
-      and preg.id = resp.pregunta
       and enc.idurl = "${idurl}"
+      and enc.id = preg.encuesta
+    
+    order by preg.id
     `;
+    // console.log(sql);
     
     var tipo_encuesta = '';
 
     connection.query(sql, (error, results) => {
       if (error) throw error;
   
+      // console.log('query validacion:');
+      // console.log(results);
+       
       if (results.length > 0) {
-        const numero = results.length-1;
-        const objeto_res = results[numero];
+        var ult_leida = results.length - 1;
+        var ult_entra = datos.pregunta.length - 1;
         
-        // Nos guardamos el tipo de la encuesta
-        tipo_encuesta = objeto_res.enc_com;
+        // Nos guardamos el tipo de la encuesta (qué comunidad)
+        tipo_encuesta = results[0].enc_com;
 
-        if (objeto_res.pre_num != datos.pregunta[0]) {
+        // validación simple para ver que la primera y última preguntas coinciden con lo que nos llega
+        if ((results[0].pre_num != datos.pregunta[0]) ||
+            (results[ult_leida].pre_num != datos.pregunta[ult_entra])) {
            actualizar = false;
            missatge = idioma == 0 ? 'No coincideixen les preguntes' : 'No coinciden las preguntas';  
         } else {
@@ -232,6 +238,7 @@ const insForm = (req, res) => {
           for (i=0; i<datos.pregunta.length; i++) {
   
             if (datos.respondido[i]) {
+              // sólo guardamos los "respondido == true"
   
               objeto_ins = {
                 piso: dato_elpiso,

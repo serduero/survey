@@ -5,7 +5,7 @@ import { database } from './database.js';
 const { createConnection } = mysql;
 
 /*
-   Mostramos página de inicio en función de si hay o no encuestas activas
+   Mostramos página de inicio en función de si está o no esa encuesta activa
 */
 
 const getSurvey = (req, res) => {

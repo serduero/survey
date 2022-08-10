@@ -38,14 +38,14 @@
                 <% results.forEach(function(pregunta) { %>
                     <!-- texto de la pregunta -->
                     <span class="container ml-3 mr-3 bg-primary text-white rounded">
-                        <p class="mt-1 mb-2"> <%= pregunta.txt_preg %>  </li>
+                        <p class="mt-1 mb-2"> <%= pregunta.preg_tit %>  </li>
                     </span>
 
                     <!-- respuestas con el valor actual -->
-                    <% pregunta.respuesta.forEach(function(item,index){ %>
+                    <% pregunta.resp_tit.forEach(function(item,index){ %>
                         <div class="d-flex flex-row bd-highlight mb-1 justify-content-between bg-info text-black rounded">
                             <div class="p-2 m-0 bd-highlight"> <%= item %></div>
-                            <div class="p-2 m-0 bd-highlight h3"> <%= pregunta.num_resps[index] %> </div>
+                            <div class="p-2 m-0 bd-highlight h3"> <%= pregunta.resp_num[index] %> </div>
                         </div>
                     <% }) %>
 

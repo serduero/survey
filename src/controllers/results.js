@@ -29,126 +29,79 @@ const getResults = (req, res) => {
 
   // Miramos los resultados de la encuesta actual activa
   var sql =
+  `select   encu.titulo as  enc_titulo,
+            preg.id as      pre_id,
+            preg.texto as   pre_pregunta,
+            resp.valor as   valor,
+            (
+                select count(*)
+                from respvecino resv
+                where resv.encuesta=encu.id and resv.pregunta=preg.id and resv.numresp=resp.id
+            ) as contador
+   
+   from encuesta encu, pregunta preg, respuestas resp
 
-  `select encu.titulo as enc_titulo, preg.id as pre_id, preg.texto as pre_pregunta, resp.valor0 as val0,
-        resp.valor1 as val1, resp.valor2 as val2, resp.valor3 as val3, resp.valor4 as val4, resp.valor5 as val5,
-        resp.valor6 as val6, resp.valor7 as val7, resp.valor8 as val8, resp.valor9 as val9,
-        resv.numresp as respuesta
-   from respvecino resv, encuesta encu, pregunta preg, respuesta resp
-   where encu.inicio<=${ahora} and encu.fin>=${ahora} and encu.activa="S" and encu.idurl="${idurl}" and
-   resv.encuesta=encu.id and resv.pregunta=preg.id and preg.id=resp.pregunta
-   order by resv.pregunta, resv.numresp`;
+   where    encu.inicio<=${ahora} and encu.fin>=${ahora} and encu.activa="S" and
+            encu.idurl="${idurl}" and encu.visible="S" and
+            preg.id=resp.pregunta
 
-  // console.log(sql);
+   order by preg.id, resp.id`;
 
-  // Lanzamos query y revisamos resultado
-  connection.query(sql, (error, results) => {
+   // console.log(sql);
+
+   // Lanzamos query y revisamos resultado
+   connection.query(sql, (error, results) => {
     if (error) throw error;
 
     // console.log(results);
-    //  console.log(results[0].enc_titulo);
-    
+    // console.log(results[0].enc_titulo);
+
     if (results.length > 0) {
-
-        // Rellenamos vector de preguntas (id + texto)
-        var codigos = [ { id_preg: results[0].pre_id,
-                          txt_preg: results[0].pre_pregunta,
-                          respuesta: [results[0].val0, results[0].val1],
-                          num_resps: [0, 0] } ];
-
-        if (results[0].val2 != null) {
-            codigos[0].respuesta.push(results[0].val2);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val3 != null) {
-            codigos[0].respuesta.push(results[0].val3);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val4 != null) {
-            codigos[0].respuesta.push(results[0].val4);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val5 != null) {
-            codigos[0].respuesta.push(results[0].val5);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val6 != null) {
-            codigos[0].respuesta.push(results[0].val6);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val7 != null) {
-            codigos[0].respuesta.push(results[0].val7);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val8 != null) {
-            codigos[0].respuesta.push(results[0].val8);
-            codigos[0].num_resps.push(0);
-        }
-        if (results[0].val9 != null) {
-            codigos[0].respuesta.push(results[0].val9);
-            codigos[0].num_resps.push(0);
-        }
-        codigos[0].num_resps[results[0].respuesta] ++;
-
-        var actualIdpreg = results[0].pre_id;
-
-        var j = 0; // indice al último elemento a rellenar de la salida "codigos"
-
-        for (var i=1; i<results.length; i++) {
-            // Si hay cambio de pregunta nuevo elemento desde 0
-            if (results[i].pre_id != actualIdpreg) {
-                codigos.push({ id: results[i].pre_id,
-                                 txt_preg: results[i].pre_pregunta,
-                                 respuesta: [results[i].val0, results[i].val1],
-                                 num_resps: [0, 0]});
-                
-                j++; // un elemento más en la salida
-
-                if (results[i].val2 != null) {
-                    codigos[j].respuesta.push(results[i].val2);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val3 != null) {
-                    codigos[j].respuesta.push(results[i].val3);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val4 != null) {
-                    codigos[j].respuesta.push(results[i].val4);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val5 != null) {
-                    codigos[j].respuesta.push(results[i].val5);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val6 != null) {
-                    codigos[j].respuesta.push(results[i].val6);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val7 != null) {
-                    codigos[j].respuesta.push(results[i].val7);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val8 != null) {
-                    codigos[j].respuesta.push(results[i].val8);
-                    codigos[j].num_resps.push(0);
-                }
-                if (results[i].val9 != null) {
-                    codigos[j].respuesta.push(results[i].val9);
-                    codigos[j].num_resps.push(0);
-                }
-                codigos[j].num_resps[results[i].respuesta] ++;
-                actualIdpreg = results[i].pre_id;
-            } else {
-                // Si no hay cambio de pregunta incrementamos contador de respuestas
-                codigos[j].num_resps[results[i].respuesta] ++;
+        var preg_resul = [];
+        var nueva_fila = false;
+        var indice = 0;
+         
+        for (var i = 0; i<results.length; i++ ){
+          if (i == 0) {
+            nueva_fila = true;
+          }
+          else {
+            if (preg_resul[indice-1].preg_id == results[i].pre_id) {
+              // id y valor de la respuesta
+              preg_resul[indice-1].resp_tit.push(results[i].valor);
+              preg_resul[indice-1].resp_num.push(results[i].contador);
+               
+              nueva_fila = false;
             }
+            else {
+              nueva_fila = true;
+            }
+          }
+  
+          // si cambio de pregunta insertamos fila nueva
+          if (nueva_fila) {
+            preg_resul.push(
+              {
+                preg_id : results[i].pre_id,
+                preg_tit: results[i].pre_pregunta,
+                resp_tit: [ results[i].valor ],
+                resp_num: [ results[i].contador ]
+              }
+            );
+            indice++;
+          }
         }
-        // console.log(codigos);
+        // console.log('vector a render:');
+        // console.log(preg_resul);
 
         // mostramos los resultados
-        res.render('results', {titulo: 'Resultats', hay: true, results: codigos, idioma: idioma});
+        var tit = idioma == 0 ? 'Resultats' : 'Resultados';
+         
+        res.render('results', {titulo: tit, hay: true, results: preg_resul, idioma: idioma});
     } else {
-        res.render('results', {titulo: 'Sense resultats', hay: false, idioma: idioma});
+        var tit = idioma == 0 ? 'Sense resultats' : 'Sin resultados';
+         
+        res.render('results', {titulo: tit, hay: false, idioma: idioma});
     }
   });
   connection.end();

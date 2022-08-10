@@ -176,84 +176,30 @@
                             <!--
                                 Checkbox si hay más de una opción a seleccionar
                             -->
-                            <%- include('partials/checkbox', {valor: '0', texto: pregunta.res_va0,
-                            enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <%- include('partials/checkbox', {valor: '1', texto: pregunta.res_va1,
-                            enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                            <% pregunta.res_val.forEach(function(resp, index) { %>
 
-                            <% if(pregunta.res_va2 != null && pregunta.res_va2 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '2', texto: pregunta.res_va2,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va3 != null && pregunta.res_va3 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '3', texto: pregunta.res_va3,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va4 != null && pregunta.res_va4 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '4', texto: pregunta.res_va4,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va5 != null && pregunta.res_va5 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '5', texto: pregunta.res_va5,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va6 != null && pregunta.res_va6 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '6', texto: pregunta.res_va6,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va7 != null && pregunta.res_va7 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '7', texto: pregunta.res_va7,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va8 != null && pregunta.res_va8 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '8', texto: pregunta.res_va8,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
-                            <% if(pregunta.res_va9 != null && pregunta.res_va9 != ''){ %>
-                                <%- include('partials/checkbox', {valor: '9', texto: pregunta.res_va9,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                            <% } %>
+                                <%- include('partials/checkbox', {valor: pregunta.res_id[index], texto: resp,
+                                enc: pregunta.enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+
+                                <!-- <% if(pregunta.res_va9 != null && pregunta.res_va9 != ''){ %>
+                                    <%- include('partials/checkbox', {valor: '9', texto: pregunta.res_va9,
+                                    enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
+                                <% } %> -->
+                            <% }) %>
+
                         <% } else { %>
                             <!--
                                 Radiobutton si sólo hay una opción a seleccionar 
                             -->
-                            <%- include('partials/radiobutton', {valor: '0', texto: pregunta.res_va0,
-                            enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <%- include('partials/radiobutton', {valor: '1', texto: pregunta.res_va1,
-                            enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                                
-                            <% if(pregunta.res_va2 != null && pregunta.res_va2 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '2', texto: pregunta.res_va2,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va3 != null && pregunta.res_va3 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '3', texto: pregunta.res_va3,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va4 != null && pregunta.res_va4 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '4', texto: pregunta.res_va4,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va5 != null && pregunta.res_va5 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '5', texto: pregunta.res_va5,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va6 != null && pregunta.res_va6 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '6', texto: pregunta.res_va6,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va7 != null && pregunta.res_va7 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '7', texto: pregunta.res_va7,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va8 != null && pregunta.res_va8 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '8', texto: pregunta.res_va8,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
-                            <% if(pregunta.res_va9 != null && pregunta.res_va9 != ''){ %>
-                                <%- include('partials/radiobutton', {valor: '9', texto: pregunta.res_va9,
-                                enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                            <% } %>
+                            <% pregunta.res_val.forEach(function(resp, index) { %>
+                                <%- include('partials/radiobutton', {valor: pregunta.res_id[index], texto: resp,
+                                enc: pregunta.enc_num, preg: pregunta.pre_num}) %>
+                            
+                                <!-- <% if(pregunta.res_va9 != null && pregunta.res_va9 != ''){ %>
+                                    <%- include('partials/radiobutton', {valor: '9', texto: pregunta.res_va9,
+                                    enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
+                                <% } %> -->
+                            <% }) %>
                         <% } %>
                     </div>
                 <% }); %> 

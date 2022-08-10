@@ -39,23 +39,18 @@ const putSurvey = (req, res) => {
             preg.num_opciones as  pre_nop,
             preg.observaciones as pre_obs,
 
-            resp.valor0 as        res_va0,
-            resp.valor1 as        res_va1,
-            resp.valor2 as        res_va2,
-            resp.valor3 as        res_va3,
-            resp.valor4 as        res_va4,
-            resp.valor5 as        res_va5,
-            resp.valor6 as        res_va6,
-            resp.valor7 as        res_va7,
-            resp.valor8 as        res_va8,
-            resp.valor9 as        res_va9
+            resp.id as            res_id,
+            resp.valor as         res_val
 
-            from encuesta enc, pregunta preg, respuesta resp
+    from encuesta enc, pregunta preg, respuestas resp
+
     where enc.inicio<=${ahora} and enc.fin>=${ahora}
       and enc.activa = "S"
       and enc.id = preg.encuesta
       and preg.id = resp.pregunta
       and enc.idurl = "${idurl}"
+    
+    order by preg.id, resp.id
     `;
   // console.log(sql);
 
@@ -67,9 +62,55 @@ const putSurvey = (req, res) => {
     // console.log(results[0].titulo);
     
     if (results.length > 0) {
+      // cargamos los datos de pregunta y respuestas para pasarlos al render: una fila por pregunta
+      var preguntas = [];
+      var nueva_fila = false;
+      var indice = 0;
+       
+      for (var i = 0; i<results.length; i++ ){
+        if (i == 0) {
+          nueva_fila = true;
+        }
+        else {
+          if (preguntas[indice-1].pre_num == results[i].pre_num) {
+            // id y valor de la respuesta
+            preguntas[indice-1].res_id.push(results[i].res_id);
+            preguntas[indice-1].res_val.push(results[i].res_val);
+             
+            nueva_fila = false;
+          }
+          else {
+            nueva_fila = true;
+          }
+        }
+
+        // si cambio de pregunta insertamos fila nueva
+        if (nueva_fila) {
+          preguntas.push(
+            {
+              enc_num: results[i].enc_num,
+              enc_tit: results[i].enc_tit,
+              enc_obs: results[i].enc_obs,
+              enc_com: results[i].enc_com,
+
+              pre_num: results[i].pre_num,
+              pre_txt: results[i].pre_txt,
+              pre_nop: results[i].pre_nop,
+              pre_obs: results[i].pre_obs,
+
+              res_id : [ results[i].res_id ],
+              res_val: [ results[i].res_val ]
+            }
+          );
+          indice++;
+        }
+      }
+
       // mostramos acceso a la encuesta (hay datos)
       let titulo = idioma == 0 ? 'Enquesta' : 'Encuesta';
-      res.render('survey', {titulo: titulo, valores: results, idioma: idioma});
+      // console.log(preguntas);
+       
+      res.render('survey', {titulo: titulo, valores: preguntas, idioma: idioma});
     } else {
       // mostramos pantalla de no encuestas
       res.render('index', {titulo: 'Sense enquestes actives', navPasw: false, hay: false, visible: 'N', idioma: 0});

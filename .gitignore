@@ -1,2 +1,3 @@
+src/controllers/database.js
 node_modules
-database.*
+.gitignore

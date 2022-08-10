@@ -12,8 +12,9 @@ const inicio = (req, res) => {
     res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N', idioma: 0});
     return;
   }
-   
-  res.render('inicio', {titulo: 'Res més a dir', idioma: idioma})
+  
+  var tit = idioma == 0 ? 'Res més a dir' : 'Nada más que decir';
+  res.render('inicio', {titulo: tit, idioma: idioma})
 }
 
 export default inicio;

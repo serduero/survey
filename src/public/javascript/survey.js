@@ -145,10 +145,14 @@ $(function () {
                 respuestas = [ $(this).attr('tagrespuesta') ];
                 respondido = [ isChecked ];
             } else {
-                pregunta.splice(0,0, $(this).attr('tagpreg') );
-                numopciones.splice(0,0, $(this).attr('tagnopc') );
-                respuestas.splice(0,0, $(this).attr('tagrespuesta') );
-                respondido.splice(0,0, isChecked );
+                // pregunta.splice(0,0, $(this).attr('tagpreg') );
+                // numopciones.splice(0,0, $(this).attr('tagnopc') );
+                // respuestas.splice(0,0, $(this).attr('tagrespuesta') );
+                // respondido.splice(0,0, isChecked );
+                pregunta.push( $(this).attr('tagpreg') );
+                numopciones.push( $(this).attr('tagnopc') );
+                respuestas.push( $(this).attr('tagrespuesta') );
+                respondido.push( isChecked );
             }
         });
         encuesta.pregunta = pregunta;
@@ -242,9 +246,10 @@ $(function () {
 
         // Todo OK: enviamos las respuestas
         // console.log('se envía: ' + strbloc + ' ' + strpis + ' ' + strporta + ' '+ strplaza);
+        // console.log(encuesta);
         
         var url = `/insform/&idurl=${idurl}&id=${idioma}`;
-        
+
         // console.log(url);
 
         $.ajax({
