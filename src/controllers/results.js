@@ -43,17 +43,18 @@ const getResults = (req, res) => {
 
    where    encu.inicio<=${ahora} and encu.fin>=${ahora} and encu.activa="S" and
             encu.idurl="${idurl}" and encu.visible="S" and
+            preg.encuesta=encu.id and
             preg.id=resp.pregunta
 
    order by preg.id, resp.id`;
 
-   // console.log(sql);
+   console.log(sql);
 
    // Lanzamos query y revisamos resultado
    connection.query(sql, (error, results) => {
     if (error) throw error;
 
-    // console.log(results);
+    console.log(results);
     // console.log(results[0].enc_titulo);
 
     if (results.length > 0) {
