@@ -79,28 +79,37 @@ $(function () {
                 $("#msgerr").html(msgtxt);
                 $("#msgerr").removeClass('d-none').addClass('d-block');
                 return false;
-            } else {
-                if (isNaN(parseFloat(strplaza)) || !isFinite(strplaza)) {
-                    msgtxt = idioma == 0 ? 'Plaça de parking incorrecta' : 'Plaza de parking incorrecta';
+            }else {
+                // y que sólo contenga números
+                let isnum = /^\d+$/.test(strplaza);
+                if(!isnum) {
+                    msgtxt = idioma == 0 ? 'El número de plaça de parking no és correcte' : 'Número de plaza de parking no es correcto';
                     $("#msgerr").html(msgtxt);
                     $("#msgerr").removeClass('d-none').addClass('d-block');
                     return false;
                 } else {
-                    // Validamos posibles decimanles
-                    const num_dec = parseFloat(strplaza);
-                    const num_int = parseInt(strplaza);
-                    if (num_dec != num_int) {
-                        msgtxt = idioma == 0 ? 'Número de plaça de parking incorrecta' : 'Número de plaza de parking incorrecta';
+                    if (isNaN(parseFloat(strplaza)) || !isFinite(strplaza)) {
+                        msgtxt = idioma == 0 ? 'Plaça de parking incorrecta' : 'Plaza de parking incorrecta';
                         $("#msgerr").html(msgtxt);
                         $("#msgerr").removeClass('d-none').addClass('d-block');
                         return false;
                     } else {
-                        // Y que sea un número OK
-                        if (num_int < 1 || num_int > 77) {
-                            msgtxt = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
+                        // Validamos posibles decimanles
+                        const num_dec = parseFloat(strplaza);
+                        const num_int = parseInt(strplaza);
+                        if (num_dec != num_int) {
+                            msgtxt = idioma == 0 ? 'Número de plaça de parking incorrecta' : 'Número de plaza de parking incorrecto';
                             $("#msgerr").html(msgtxt);
                             $("#msgerr").removeClass('d-none').addClass('d-block');
                             return false;
+                        } else {
+                            // Y que sea un número OK
+                            if (num_int < 1 || num_int > 77) {
+                                msgtxt = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
+                                $("#msgerr").html(msgtxt);
+                                $("#msgerr").removeClass('d-none').addClass('d-block');
+                                return false;
+                            }
                         }
                     }
                 }
