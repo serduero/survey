@@ -48,13 +48,13 @@ const getResults = (req, res) => {
 
    order by preg.id, resp.id`;
 
-   console.log(sql);
+   //  console.log(sql);
 
    // Lanzamos query y revisamos resultado
    connection.query(sql, (error, results) => {
     if (error) throw error;
 
-    console.log(results);
+    // console.log(results);
     // console.log(results[0].enc_titulo);
 
     if (results.length > 0) {

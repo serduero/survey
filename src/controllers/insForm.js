@@ -33,6 +33,7 @@ const insForm = (req, res) => {
   // console.log(req.body[2]);
   // console.log(req.body[3]);
   // console.log(req.body[4]);
+  // console.log(req.body[5]);
 
   // Validamos el bloque, piso, puerta y plaza parking
 
@@ -121,6 +122,7 @@ const insForm = (req, res) => {
   // console.log('num opciones : ' + datos.numopciones);
   // console.log('id respuestas: ' + datos.respuestas);
   // console.log('respuestas   : ' + datos.respondido);
+  // console.log('textos     : ' + datos.txt_adic);
 
   // Conectamos con la base de datos
   const connection = createConnection({
@@ -225,6 +227,7 @@ const insForm = (req, res) => {
         // console.log('num opciones : ' + datos.numopciones);
         // console.log('id respuestas: ' + datos.respuestas);
         // console.log('respuestas   : ' + datos.respondido);
+        // console.log('textos adic. : ' + datos.txt_adic);
 
         // borramos los posibles valores previos si los hubiera
         sql = `delete from respvecino where encuesta=${dato_encuesta} and piso="${dato_elpiso}"`;
@@ -244,7 +247,8 @@ const insForm = (req, res) => {
                 piso: dato_elpiso,
                 encuesta: dato_encuesta,
                 pregunta: parseInt(datos.pregunta[i]),
-                numresp: parseInt(datos.respuestas[i])
+                numresp: parseInt(datos.respuestas[i]),
+                adicional: datos.txt_adic[i]
               };
               
               // console.log(objeto_ins);

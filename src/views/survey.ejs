@@ -185,6 +185,10 @@
                                     <%- include('partials/checkbox', {valor: '9', texto: pregunta.res_va9,
                                     enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
                                 <% } %> -->
+                                <% if(pregunta.res_tip[index] == 'T'){ %>
+                                    <%- include('partials/input', {id: pregunta.res_id[index]}) %>
+                                <% } %>
+                                 
                             <% }) %>
 
                         <% } else { %>
@@ -199,6 +203,10 @@
                                     <%- include('partials/radiobutton', {valor: '9', texto: pregunta.res_va9,
                                     enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
                                 <% } %> -->
+                                <% if(pregunta.res_tip[index] == 'T'){ %>
+                                    <%- include('partials/input', {id: pregunta.res_id[index]}) %>
+                                <% } %>
+                                 
                             <% }) %>
                         <% } %>
                     </div>

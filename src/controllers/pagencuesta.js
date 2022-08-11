@@ -40,7 +40,8 @@ const putSurvey = (req, res) => {
             preg.observaciones as pre_obs,
 
             resp.id as            res_id,
-            resp.valor as         res_val
+            resp.valor as         res_val,
+            resp.tipo as          res_tip
 
     from encuesta enc, pregunta preg, respuestas resp
 
@@ -76,6 +77,7 @@ const putSurvey = (req, res) => {
             // id y valor de la respuesta
             preguntas[indice-1].res_id.push(results[i].res_id);
             preguntas[indice-1].res_val.push(results[i].res_val);
+            preguntas[indice-1].res_tip.push(results[i].res_tip);
              
             nueva_fila = false;
           }
@@ -99,7 +101,8 @@ const putSurvey = (req, res) => {
               pre_obs: results[i].pre_obs,
 
               res_id : [ results[i].res_id ],
-              res_val: [ results[i].res_val ]
+              res_val: [ results[i].res_val ],
+              res_tip: [ results[i].res_tip ]
             }
           );
           indice++;

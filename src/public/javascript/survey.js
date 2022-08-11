@@ -28,7 +28,9 @@ $(function () {
 
         event.preventDefault();
         
+        //
         // Validamos bloque, piso y puerta informados y ok's
+        //
         var strplaza = $('#plaza').length ? $("#plaza").val().trim() : '';
         
         var strbloc =  $('#bloc').length ?
@@ -68,7 +70,9 @@ $(function () {
             }
         }
 
+        //
         // Validamos que se haya indicado una plaza de parking y sea correcta
+        //
         if ($('#plaza').length) {
             if (strplaza == '') {
                 msgtxt = idioma == 0 ? 'No informada la plaça de parking' : 'No informada la plaza de parking';
@@ -120,7 +124,9 @@ $(function () {
             }
         }
 
+        //
         // validamos el número de opciones informadas
+        //
         var encuesta = new Object();
 
         var primero = true;
@@ -130,41 +136,78 @@ $(function () {
         var numopciones = [];
         var respuestas = [];
         var respondido = [];
+        var txt_adic = [];
 
         $("#formulario div div div input").each(function(){
-        
-            encuesta.id = $(this).attr('tagenc');
-
-            isChecked = $(this).is(':checked');
 
             if (primero) {
                 primero = false;
+
+                encuesta.id = $(this).attr('tagenc');
+                isChecked = $(this).is(':checked');
 
                 pregunta = [ $(this).attr('tagpreg') ];
                 numopciones = [ $(this).attr('tagnopc') ];
                 respuestas = [ $(this).attr('tagrespuesta') ];
                 respondido = [ isChecked ];
+
             } else {
                 // pregunta.splice(0,0, $(this).attr('tagpreg') );
                 // numopciones.splice(0,0, $(this).attr('tagnopc') );
                 // respuestas.splice(0,0, $(this).attr('tagrespuesta') );
                 // respondido.splice(0,0, isChecked );
-                pregunta.push( $(this).attr('tagpreg') );
-                numopciones.push( $(this).attr('tagnopc') );
-                respuestas.push( $(this).attr('tagrespuesta') );
-                respondido.push( isChecked );
+
+                if ( $(this).attr('tagtxt') )
+                {
+                    txt_adic.pop(); // el añadido por la propia pregunta
+                    txt_adic.push( $(this).val().trim() );
+                } else {
+                    isChecked = $(this).is(':checked');
+    
+                    pregunta.push( $(this).attr('tagpreg') );
+                    numopciones.push( $(this).attr('tagnopc') );
+                    respuestas.push( $(this).attr('tagrespuesta') );
+                    respondido.push( isChecked );
+                    txt_adic.push( '' );
+                }
             }
         });
+        
+        // console.log('pregunta:');
+        // console.log(pregunta);
+        // console.log('numopciones:');
+        // console.log(numopciones);
+        // console.log('respuestas:');
+        // console.log(respuestas);
+        // console.log('respondido:');
+        // console.log(respondido);
+        // console.log('textos:');
+        // console.log(txt_adic);
+
         encuesta.pregunta = pregunta;
         encuesta.numopciones = numopciones;
         encuesta.respuestas = respuestas;
         encuesta.respondido = respondido;
+        encuesta.txt_adic = txt_adic;
 
+        // console.log('encuesta con todos los bloques:');
         // console.log(encuesta);
-        // console.log(pregunta);
-        // console.log(numopciones);
-        // console.log(respuestas);
-        // console.log(respondido);
+         
+        // Si alguna pregunta es con texto, y lo tiene, y no se ha seleccionado se da error
+        // sin embargo permitiremos seleccionar una respuesta con texto y no poner nada en el cajetín
+        var incoherencia = false;
+        for (var i=0; i<encuesta.txt_adic.length && !incoherencia; i++) {
+            if (encuesta.txt_adic[i] != '' && !encuesta.respondido[i]) {
+                incoherencia = true;
+            }
+        }
+        if (incoherencia) {
+            msgtxt = idioma == 0 ? "Text introduït a resposta no seleccionada" :
+                                   'Texto introducido en respuesta no seleccionada';
+            $("#msgerr").html(msgtxt);
+            $("#msgerr").removeClass('d-none').addClass('d-block');
+            return false;
+        }
 
         // Validamos que se ha contestado a todas las preguntas y el número que toca
         var hay_una = false;
