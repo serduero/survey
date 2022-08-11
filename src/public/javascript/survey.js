@@ -138,6 +138,8 @@ $(function () {
         var respondido = [];
         var txt_adic = [];
 
+        var textoadic = '';
+
         $("#formulario div div div input").each(function(){
 
             if (primero) {
@@ -160,7 +162,11 @@ $(function () {
                 if ( $(this).attr('tagtxt') )
                 {
                     txt_adic.pop(); // el añadido por la propia pregunta
-                    txt_adic.push( $(this).val().trim() );
+                    textoadic = $(this).val().trim();
+                    if (textoadic.length > 120) {
+                        textoadic = textoadic.substring(0,120);
+                    }
+                    txt_adic.push( textoadic );
                 } else {
                     isChecked = $(this).is(':checked');
     
