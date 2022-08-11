@@ -138,7 +138,7 @@ $(function () {
         var respondido = [];
         var txt_adic = [];
 
-        var textoadic = '';
+        var textoadic = [];
 
         $("#formulario div div div input").each(function(){
 
@@ -152,20 +152,16 @@ $(function () {
                 numopciones = [ $(this).attr('tagnopc') ];
                 respuestas = [ $(this).attr('tagrespuesta') ];
                 respondido = [ isChecked ];
+                txt_adic.push( '' );
 
             } else {
-                // pregunta.splice(0,0, $(this).attr('tagpreg') );
-                // numopciones.splice(0,0, $(this).attr('tagnopc') );
-                // respuestas.splice(0,0, $(this).attr('tagrespuesta') );
-                // respondido.splice(0,0, isChecked );
-
                 if ( $(this).attr('tagtxt') )
                 {
-                    txt_adic.pop(); // el añadido por la propia pregunta
                     textoadic = $(this).val().trim();
                     if (textoadic.length > 120) {
                         textoadic = textoadic.substring(0,120);
                     }
+                    txt_adic.pop(); // el añadido por la propia pregunta
                     txt_adic.push( textoadic );
                 } else {
                     isChecked = $(this).is(':checked');
