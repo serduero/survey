@@ -33,6 +33,7 @@ const getResults = (req, res) => {
             preg.id as      pre_id,
             preg.texto as   pre_pregunta,
             resp.valor as   valor,
+            resp.tipo as    tipo,
             (
                 select count(*)
                 from respvecino resv
@@ -69,8 +70,9 @@ const getResults = (req, res) => {
           else {
             if (preg_resul[indice-1].preg_id == results[i].pre_id) {
               // id y valor de la respuesta
-              preg_resul[indice-1].resp_tit.push(results[i].valor);
-              preg_resul[indice-1].resp_num.push(results[i].contador);
+              preg_resul[indice-1].resp_tit.push( results[i].valor );
+              preg_resul[indice-1].resp_num.push( results[i].contador );
+              preg_resul[indice-1].tipo.push( results[i].tipo );
                
               nueva_fila = false;
             }
@@ -86,7 +88,8 @@ const getResults = (req, res) => {
                 preg_id : results[i].pre_id,
                 preg_tit: results[i].pre_pregunta,
                 resp_tit: [ results[i].valor ],
-                resp_num: [ results[i].contador ]
+                resp_num: [ results[i].contador ],
+                tipo: [  results[i].tipo ]
               }
             );
             indice++;
