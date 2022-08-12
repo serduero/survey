@@ -44,10 +44,24 @@
                     <!-- respuestas con el valor actual -->
                     <% pregunta.resp_tit.forEach(function(item,index){ %>
                         <div class="d-flex flex-row bd-highlight mb-1 justify-content-between bg-info text-black rounded">
-                            <div class="p-2 m-0 bd-highlight">
+                            <div 
+                            <% if(pregunta.resp_num[index]==0){ %>
+                                class="p-2 m-0 bd-highlight" style="color:grey"
+                            <% } else { %>
+                                class="p-2 m-0 bd-highlight"
+                            <% } %>
+                            >
                                 <%= item %> <% if(pregunta.tipo[index]=='T'){ %> ...<% } %>
                             </div>
-                            <div class="p-2 m-0 bd-highlight h3"> <%= pregunta.resp_num[index] %> </div>
+                            <div 
+                            <% if(pregunta.resp_num[index]==0){ %>
+                                class="p-2 m-0 bd-highlight h4" style="color:grey"
+                            <% } else { %>
+                                class="p-2 m-0 bd-highlight h3"
+                            <% } %>
+                            >
+                                <%= pregunta.resp_num[index] %>
+                            </div>
                         </div>
                     <% }) %>
 
@@ -57,7 +71,7 @@
     </div>
   </div>
 
-  <%- include('partials/tornar', {idioma: idioma}) %>
-  <script src="/javascript/survey.js"> </script>
+  <%- include('partials/navtornar', {idioma: idioma}) %>
+  <script src="/javascript/results.js"> </script>
 </body>
 </html>

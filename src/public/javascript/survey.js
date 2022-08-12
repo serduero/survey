@@ -1,5 +1,9 @@
 // DOM cargado
 $(function () {
+    // Se selecciona volver
+    $("#tornar").on("click", function () {
+        history.back();
+    });
 
     // obtenemos los parámetros de idurl de la encuesta y su idioma
     var idurl = getUrlParameter('idurl');
@@ -312,11 +316,14 @@ $(function () {
             data: JSON.stringify([encuesta, strbloc, strpis, strporta, strplaza]),
             contentType: "application/json",
             // dataType   : "json",
-            success    : function(resp) {
+            success: function(resp) {
                 let txt = idioma == 0 ? 'Enquesta enviada':'Encuesta enviada';
 
                 alert(txt);
                 if (resp == '') {
+                    // para evitar que el "back" regrese a la encuesta
+                    history.replaceState(null, null, `/fi/&id=${idioma}`)
+                    // mostramos la pantalla de fin
                     window.location.replace(`/fi/&id=${idioma}`);
                 } else {
                     $("#msgerr").html(resp);
