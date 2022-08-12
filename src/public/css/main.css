@@ -7,3 +7,9 @@ input.form-control {
   background: gainsboro;
 }
 
+.fa.fa-question{
+  color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: blueviolet;
+}
+

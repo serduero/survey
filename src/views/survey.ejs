@@ -161,7 +161,10 @@
 
                     <div class="pregunta" tagpregunta="<%= pregunta.pre_num %>">
                         
-                        <li class="mt-4 mb-2"> <%= pregunta.pre_txt %>
+                        <i class="fa fa-question mt-4 mb-2"></i>
+                        <span class="ms-1"> <%= pregunta.pre_txt %></span>
+                            
+                        
                             <% if(pregunta.pre_nop >1) { %>
                                 </br>
                                 <p class="small" style="color:grey"><em>
@@ -170,7 +173,18 @@
                             <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
                                 <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
                             <% } %>
-                        </li>
+
+                        <!-- </i> -->
+                        <!-- <li class="mt-4 mb-2"> <%= pregunta.pre_txt %>
+                            <% if(pregunta.pre_nop >1) { %>
+                                </br>
+                                <p class="small" style="color:grey"><em>
+                                    Selecciona <%= pregunta.pre_nop %> <% if(idioma == 0){ %>opcions<% } else {%>opciones<% } %></em></p>
+                            <% } %>
+                            <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
+                                <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
+                            <% } %>
+                        </li> -->
 
                         <% if(pregunta.pre_nop>1){ %>
                             <!--
