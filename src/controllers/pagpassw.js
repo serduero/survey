@@ -10,7 +10,8 @@ const chgPassw = (req, res) => {
 
     if (idioma != 1 && idioma != 0) {
       // mostramos pantalla de no encuestas
-      res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N', idioma: 0});
+      res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N',
+                           idioma: 0, imagen: ''});
       return;
     }
 

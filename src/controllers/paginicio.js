@@ -14,7 +14,8 @@ const getSurvey = (req, res) => {
 
   if (idurl === false) {
     // mostramos pantalla de no encuestas
-    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N', idioma: 0});
+    res.render('index', {titulo: 'No trobada', navPasw: false, hay: false, visible: 'N',
+                         idioma: 0, imagen: ''});
     return;
   }
 
@@ -41,10 +42,12 @@ const getSurvey = (req, res) => {
     if (results.length > 0) {
       // mostramos acceso a la encuesta (hay datos)
       res.render('index', {titulo: 'Principal', idurl: idurl, navPasw: false,
-                           hay: true, visible: results[0].visible, idioma: results[0].idioma});
+                           hay: true, visible: results[0].visible, idioma: results[0].idioma,
+                          imagen: results[0].img});
     } else {
       // mostramos pantalla de no encuestas
-      res.render('index', {titulo: 'Sense enquestes', navPasw: false, hay: false, visible: 'N', idioma: 0});
+      res.render('index', {titulo: 'Sense enquestes', navPasw: false, hay: false, visible: 'N',
+                           idioma: 0, imagen: ''});
     }
   });
   connection.end();

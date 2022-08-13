@@ -8,6 +8,26 @@ import chgPassw from '../controllers/pagpassw.js';
 import insForm from '../controllers/insForm.js';
 import inicio from '../controllers/inicio.js';
 import getResults from '../controllers/results.js';
+import isrtImag from '../controllers/isrtImag.js';
+import mImage from '../controllers/multer.js';
+
+// import multer from 'multer';
+
+// // Obtenemos la imagen via multer
+// var storage = multer.diskStorage({
+//     destination: (req, file, callBack) => {
+//         // directorio donde se guardará la imagen
+//         callBack(null, './src/public/images/');
+//     },
+//     filename: (req, file, callBack) => {
+//         // nombre que contendrá la imagen
+//         callBack(null, file.originalname);
+//     }
+// });
+
+// var upload = multer({
+//     storage: storage
+// });
 
 // Página principal
 router.get('/:parms', getSurvey);
@@ -26,5 +46,8 @@ router.get('/results/:parms', getResults);
 
 // Página tras contestar
 router.get('/fi/:parms', inicio);
+
+// Insertar imagen
+router.post('/isrtImag', mImage.single('picture'), isrtImag);
 
 export default router;
