@@ -13,3 +13,25 @@ input.form-control {
   -webkit-text-stroke-color: blueviolet;
 }
 
+.acceso{
+  color: white;
+  font-size: 20px;
+  font-weight:normal;
+  background-color: blue;
+  padding: 20px;
+}
+
+.hrefacc{
+  color: white;
+  text-decoration: none;
+}
+
+.resultados{
+  color: white;
+  font-size: 16px;
+  font-weight:normal;
+  background-color: grey;
+  margin-top: 28px;
+}
+
+
