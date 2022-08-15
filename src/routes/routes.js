@@ -9,6 +9,7 @@ import insForm from '../controllers/insForm.js';
 import inicio from '../controllers/inicio.js';
 import getResults from '../controllers/results.js';
 import isrtImag from '../controllers/isrtImag.js';
+import delImag from '../controllers/delImag.js';
 import mImage from '../controllers/multer.js';
 
 // import multer from 'multer';
@@ -49,5 +50,8 @@ router.get('/fi/:parms', inicio);
 
 // Insertar imagen
 router.post('/isrtImag', mImage.single('picture'), isrtImag);
+
+// Borrar imagen
+router.delete('/delImag', delImag);
 
 export default router;
