@@ -2,6 +2,7 @@ import express from 'express';
 const { Router } = express;
 const router = Router();
 
+import control from '../controllers/control.js';
 import getSurvey from '../controllers/paginicio.js';
 import putSurvey from '../controllers/pagencuesta.js';
 import chgPassw from '../controllers/pagpassw.js';
@@ -11,24 +12,10 @@ import getResults from '../controllers/results.js';
 import isrtImag from '../controllers/isrtImag.js';
 import delImag from '../controllers/delImag.js';
 import mImage from '../controllers/multer.js';
+import sendMail from '../controllers/sendMail.js';
 
-// import multer from 'multer';
-
-// // Obtenemos la imagen via multer
-// var storage = multer.diskStorage({
-//     destination: (req, file, callBack) => {
-//         // directorio donde se guardará la imagen
-//         callBack(null, './src/public/images/');
-//     },
-//     filename: (req, file, callBack) => {
-//         // nombre que contendrá la imagen
-//         callBack(null, file.originalname);
-//     }
-// });
-
-// var upload = multer({
-//     storage: storage
-// });
+// Control de acceso
+router.all('*', control);
 
 // Página principal
 router.get('/:parms', getSurvey);
@@ -49,9 +36,12 @@ router.get('/results/:parms', getResults);
 router.get('/fi/:parms', inicio);
 
 // Insertar imagen
-router.post('/isrtImag', mImage.single('picture'), isrtImag);
+router.post('/isrtImag/:parms', mImage.single('picture'), isrtImag);
 
 // Borrar imagen
-router.delete('/delImag', delImag);
+router.delete('/delImag/:parms', delImag);
+
+// Enviar correo
+router.post('/sendMail/:parms', sendMail);
 
 export default router;

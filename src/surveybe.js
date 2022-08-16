@@ -30,7 +30,7 @@ server.use(indexRoutes);
 server.use(express.static(join(__dirname, 'public')));
 
 // Control de sitio no encontrado
-server.get('*', function(req, res) {
+server.all('*', function(req, res) {
   res.status(404);
   res.render('404', {mensaje: 'No trobada...'});
   return;
