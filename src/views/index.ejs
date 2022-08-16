@@ -14,17 +14,14 @@
         <% if(imagen == '*'){ %>
           <img src="img/finca.JPG" alt="Home" class="rounded-pill w-25">
         <% } else { %>
-          <img src="images/<%= imagen %>" alt="Home" class="rounded-pill img-fluid">
+          <img src="images/<%= imagen %>" alt="Home" class="imagen rounded img-fluid">
         <% } %>
         
-        <p class="my-1 fw-bold my-3">
-          <% if(idioma == 0){ %>
-            Enquestes de la comunitat
-          <% } else {%>  
-            Encuestas de la comunidad
-          <% } %>
-        </p>
         <% if(hay){ %>
+          <p class="my-1 fw-bold my-3">
+            <%= tit %>
+          </p>
+        
           <%- include('partials/navsurvey', {idurl: idurl, idioma: idioma}) %>
 
           <% if(visible == 'S'){ %>
@@ -40,8 +37,9 @@
         <% if(navPasw){ %>
           <%- include('partials/navpassw', {idioma: idioma}) %>
         <% } %>
-         
-        <%- include('partials/footer', {idioma: idioma}) %>
+        <% if(hay){ %>
+          <%- include('partials/footer', {msj: adic}) %>
+        <% } %>
     </div>
 </header>
 

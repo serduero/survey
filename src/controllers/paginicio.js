@@ -42,7 +42,8 @@ const getSurvey = (req, res) => {
     if (results.length > 0) {
       // mostramos acceso a la encuesta (hay datos)
       res.render('index', {titulo: 'Principal', idurl: idurl, navPasw: false,
-                           hay: true, visible: results[0].visible, idioma: results[0].idioma,
+                          tit: results[0].titulo, adic: results[0].msjadic,
+                          hay: true, visible: results[0].visible, idioma: results[0].idioma,
                           imagen: results[0].img});
     } else {
       // mostramos pantalla de no encuestas

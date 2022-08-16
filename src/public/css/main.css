@@ -23,6 +23,18 @@ input.form-control {
 
 .hrefacc{
   color: white;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.hrefacc:hover{
+  color: white;
+  font-size: 21px;
+  text-decoration: none;
+}
+
+.hrefacc:visited .hrefacc:active {
+  color: white;
   text-decoration: none;
 }
 
@@ -32,6 +44,10 @@ input.form-control {
   font-weight:normal;
   background-color: grey;
   margin-top: 28px;
+}
+
+.imagen{
+  height: 200px;
 }
 
 
