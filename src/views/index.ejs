@@ -11,19 +11,24 @@
 <body>
   <header class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="d-flex flex-column justify-content-center align-items-center">
-        <% if(imagen == '*'){ %>
-          <img src="img/finca.JPG" alt="Home" class="rounded-pill w-25">
-        <% } else { %>
-          <img src="images/<%= imagen %>" alt="Home" class="imagen rounded img-fluid">
-        <% } %>
-        
         <% if(hay){ %>
+
+          <!-- Imagen -->
+          <% if(imagen == '*'){ %>
+            <img src="img/finca.JPG" alt="Home" class="rounded-pill w-25">
+          <% } else { %>
+            <img src="images/<%= imagen %>" alt="Home" class="imagen rounded img-fluid">
+          <% } %>
+        
+          <!-- Título -->
           <p class="my-1 fw-bold my-3">
             <%= tit %>
           </p>
         
+          <!-- Acceso a la encuesta -->
           <%- include('partials/navsurvey', {idurl: idurl, idioma: idioma}) %>
 
+          <!-- Acceso a los resultados -->
           <% if(visible == 'S'){ %>
             <%- include('partials/navresul', {idurl: idurl, idioma: idioma}) %>  
           <% } %>
@@ -34,9 +39,12 @@
           </div>
         <% } %>
 
+        <!-- Acceso a cambio de password -->
         <% if(navPasw){ %>
           <%- include('partials/navpassw', {idioma: idioma}) %>
         <% } %>
+
+        <!-- Mensaje adicional de la encuesta -->
         <% if(hay){ %>
           <%- include('partials/footer', {msj: adic}) %>
         <% } %>

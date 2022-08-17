@@ -6,11 +6,8 @@ import { getUrlParameter } from './funciones.js';
 */
 const control = (req, res, next) => {
 
-    // console.log('en control');
-    // console.log(req.params['0']);
-    
     let ruta = req.params['0'].split('/')[1];
-    let rutasValidas = ['isrtImag', 'delImag', 'sendMail'];
+    let rutasValidas = ['isrtImag', 'delImag', 'sendMail', 'reqImags'];
     
     // console.log('ruta: ' + ruta);
 

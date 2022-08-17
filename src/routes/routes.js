@@ -13,6 +13,7 @@ import isrtImag from '../controllers/isrtImag.js';
 import delImag from '../controllers/delImag.js';
 import mImage from '../controllers/multer.js';
 import sendMail from '../controllers/sendMail.js';
+import reqImags from '../controllers/reqImags.js';
 
 // Control de acceso
 router.all('*', control);
@@ -34,6 +35,9 @@ router.get('/results/:parms', getResults);
 
 // Página tras contestar
 router.get('/fi/:parms', inicio);
+
+// Listar imágenes
+router.get('/reqImags/:parms', reqImags);
 
 // Insertar imagen
 router.post('/isrtImag/:parms', mImage.single('picture'), isrtImag);
