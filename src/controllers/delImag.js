@@ -27,14 +27,14 @@ const delImag = (req, res) => {
 
                 unlinkSync(fichero, (err) => {
                     if (err) {
-                        res.send({resul: 'KO', adicional:err.toString()});
+                        res.json({resul: 'KO', adicional:err.toString()});
                         return;
                     }
                 });
                 numero ++;
               }
             }
-            res.send({resul: 'OK', adicional: numero.toString()});
+            res.json({resul: 'OK', adicional: numero.toString()});
         });
     }
     else {
@@ -44,14 +44,15 @@ const delImag = (req, res) => {
         if (existsSync(fichero)) {
             unlink(fichero, (err) => {
                 if (err) {
-                    res.send({resul: 'KO', adicional:err.toString()});
+                    res.json({resul: 'KO', adicional:err.toString()});
+                    return;
                 }
                 else {
-                    res.send({resul:'OK', adicional: '1'});
+                    res.json({resul: 'OK', adicional: '1'});
                 }
             });
         } else {
-            res.send({resul: 'OK', adicional:'0'});
+            res.json({resul: 'OK', adicional: '0'});
         }
     }
 }
