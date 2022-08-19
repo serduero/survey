@@ -248,17 +248,17 @@ $(function () {
 
                         // daremos error si no se ha contestado ninguna o si no coincide el número de respuestas
                         switch(operador[i-1]) {
-                            case '=':
+                            case 'igual':
                                 if (respondidas != numopciones[i-1]) {
                                     por_numero = true;
                                 }
                             break;
-                            case '<':
+                            case 'menor':
                                 if (respondidas >= numopciones[i-1]) {
                                     por_numero = true;
                                 }
                             break;
-                            default:  // '>'
+                            default:  // 'mayor'
                                 if (respondidas <= numopciones[i-1]) {
                                     por_numero = true;
                                 }
@@ -285,17 +285,17 @@ $(function () {
                         } else {
                             // daremos error si no se ha contestado ninguna o si no coincide el número de respuestas
                             switch(operador[pregunta.length-1]) {
-                                case '=':
+                                case 'igual':
                                     if (respondidas != numopciones[pregunta.length-1]) {
                                         por_numero = true;
                                     }
                                 break;
-                                case '<':
+                                case 'menor':
                                     if (respondidas >= numopciones[pregunta.length-1]) {
                                         por_numero = true;
                                     }
                                 break;
-                                default:  // '>'
+                                default:  // 'mayor'
                                     if (respondidas <= numopciones[pregunta.length-1]) {
                                         por_numero = true;
                                     }

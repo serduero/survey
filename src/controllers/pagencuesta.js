@@ -90,6 +90,8 @@ const putSurvey = (req, res) => {
 
         // si cambio de pregunta insertamos fila nueva
         if (nueva_fila) {
+          let operador = results[i].pre_ope == '=' ? 'igual' : results[i].pre_ope == '>' ? 'mayor' : 'menor';
+           
           preguntas.push(
             {
               enc_num: results[i].enc_num,
@@ -100,7 +102,7 @@ const putSurvey = (req, res) => {
               pre_num: results[i].pre_num,
               pre_txt: results[i].pre_txt,
               pre_nop: results[i].pre_nop,
-              pre_ope: results[i].pre_ope,
+              pre_ope: operador,
               pre_obs: results[i].pre_obs,
 
               res_id : [ results[i].res_id ],

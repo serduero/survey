@@ -166,7 +166,7 @@
                             
                             <!-- En función del operador indicamos un mensaje adicional asociado a la pregunta -->
                             <% switch (pregunta.pre_ope) {
-                            case '=' : %>
+                            case "igual" : %>
                                     <% if(pregunta.pre_nop >1) { %>
                                         </br>
                                         <p class="small" style="color:grey"><em>
@@ -174,7 +174,7 @@
                                     <% } %>
                                     <% break;
                             
-                            case '<' : %>
+                            case "menor" : %>
                                     <% if(pregunta.pre_nop > 2) { %>
                                         </br>
                                         <p class="small" style="color:grey"><em>
@@ -183,7 +183,7 @@
                                     <% } %>
                                     <% break;
                             
-                            case '>' : %>
+                            default: %>
                                     </br>
                                     <p class="small" style="color:grey"><em>
                                         Selecciona <% if(idioma == 0){ %>més de <% } else {%>más de <% } %>
@@ -194,8 +194,7 @@
                                             <% if(idioma == 0){ %> opcions<% } else {%> opciones<% } %>
                                         <% } %>
                                         </em></p>
-                                    <% break;
-                            } %>
+                            <% } %>
                             
                             <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
                                 <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
@@ -205,7 +204,7 @@
                         <!-- Lista de preguntas -->
                         <!-- ------------------ -->
 
-                        <% if ((pregunta.pre_nop == 1 && pregunta.pre_ope == '=') || (pregunta.pre_nop == 2 && pregunta.pre_ope == '<')){ %>
+                        <% if ((pregunta.pre_nop == 1 && pregunta.pre_ope == "igual") || (pregunta.pre_nop == 2 && pregunta.pre_ope == "menor")){ %>
                             <!--
                                 Radiobutton si sólo hay una opción a seleccionar 
                             -->
