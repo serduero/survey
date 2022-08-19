@@ -38,6 +38,7 @@ const putSurvey = (req, res) => {
             preg.id as            pre_num,
             preg.texto as         pre_txt,
             preg.num_opciones as  pre_nop,
+            preg.operador as      pre_ope,
             preg.observaciones as pre_obs,
 
             resp.id as            res_id,
@@ -99,6 +100,7 @@ const putSurvey = (req, res) => {
               pre_num: results[i].pre_num,
               pre_txt: results[i].pre_txt,
               pre_nop: results[i].pre_nop,
+              pre_ope: results[i].pre_ope,
               pre_obs: results[i].pre_obs,
 
               res_id : [ results[i].res_id ],

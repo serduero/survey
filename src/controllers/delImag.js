@@ -28,6 +28,7 @@ const delImag = (req, res) => {
                 unlinkSync(fichero, (err) => {
                     if (err) {
                         res.json({resul: 'KO', adicional:err.toString()});
+                        res.end();
                         return;
                     }
                 });
@@ -35,6 +36,7 @@ const delImag = (req, res) => {
               }
             }
             res.json({resul: 'OK', adicional: numero.toString()});
+            res.end();
         });
     }
     else {
@@ -45,14 +47,17 @@ const delImag = (req, res) => {
             unlink(fichero, (err) => {
                 if (err) {
                     res.json({resul: 'KO', adicional:err.toString()});
+                    res.end();
                     return;
                 }
                 else {
                     res.json({resul: 'OK', adicional: '1'});
+                    res.end();
                 }
             });
         } else {
             res.json({resul: 'OK', adicional: '0'});
+            res.end();
         }
     }
 }

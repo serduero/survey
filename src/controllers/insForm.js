@@ -121,6 +121,7 @@ const insForm = (req, res) => {
   // console.log('id encuesta: ' + datos.id);
   // console.log('id preguntas : ' + datos.pregunta);
   // console.log('num opciones : ' + datos.numopciones);
+  // console.log('operadores   : ' + datos.operador);
   // console.log('id respuestas: ' + datos.respuestas);
   // console.log('respuestas   : ' + datos.respondido);
   // console.log('textos     : ' + datos.txt_adic);

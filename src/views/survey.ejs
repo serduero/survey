@@ -164,48 +164,48 @@
                         <i class="fa fa-question mt-4 mb-2"></i>
                         <span class="ms-1"> <%= pregunta.pre_txt %></span>
                             
-                        
-                            <% if(pregunta.pre_nop >1) { %>
-                                </br>
-                                <p class="small" style="color:grey"><em>
-                                    Selecciona <%= pregunta.pre_nop %> <% if(idioma == 0){ %>opcions<% } else {%>opciones<% } %></em></p>
-                            <% } %>
+                            <!-- En función del operador indicamos un mensaje adicional asociado a la pregunta -->
+                            <% switch (pregunta.pre_ope) {
+                            case '=' : %>
+                                    <% if(pregunta.pre_nop >1) { %>
+                                        </br>
+                                        <p class="small" style="color:grey"><em>
+                                            Selecciona <%= pregunta.pre_nop %> <% if(idioma == 0){ %>opcions<% } else {%>opciones<% } %></em></p>
+                                    <% } %>
+                                    <% break;
+                            
+                            case '<' : %>
+                                    <% if(pregunta.pre_nop > 2) { %>
+                                        </br>
+                                        <p class="small" style="color:grey"><em>
+                                            Selecciona <% if(idioma == 0){ %>menys de <% } else {%>menos de<% } %>
+                                            <%= pregunta.pre_nop %><% if(idioma == 0){ %> opcions<% } else {%> opciones<% } %></em></p>
+                                    <% } %>
+                                    <% break;
+                            
+                            case '>' : %>
+                                    </br>
+                                    <p class="small" style="color:grey"><em>
+                                        Selecciona <% if(idioma == 0){ %>més de <% } else {%>más de <% } %>
+                                        <%= pregunta.pre_nop %>
+                                        <% if(pregunta.pre_nop == 1) { %>
+                                            <% if(idioma == 0){ %> opció<% } else {%> opción<% } %>
+                                        <% } else {%>
+                                            <% if(idioma == 0){ %> opcions<% } else {%> opciones<% } %>
+                                        <% } %>
+                                        </em></p>
+                                    <% break;
+                            } %>
+                            
                             <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
                                 <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
                             <% } %>
 
-                        <!-- </i> -->
-                        <!-- <li class="mt-4 mb-2"> <%= pregunta.pre_txt %>
-                            <% if(pregunta.pre_nop >1) { %>
-                                </br>
-                                <p class="small" style="color:grey"><em>
-                                    Selecciona <%= pregunta.pre_nop %> <% if(idioma == 0){ %>opcions<% } else {%>opciones<% } %></em></p>
-                            <% } %>
-                            <% if(pregunta.pre_obs != '' && pregunta.pre_obs != null) { %>
-                                <a class="helpi ml-1" href="" numero="<%= pregunta.pre_num %>" id="botonobvs<%= pregunta.pre_num %>" valor="<%= pregunta.pre_obs %>">+info</a>
-                            <% } %>
-                        </li> -->
+                        <!-- ------------------ -->
+                        <!-- Lista de preguntas -->
+                        <!-- ------------------ -->
 
-                        <% if(pregunta.pre_nop>1){ %>
-                            <!--
-                                Checkbox si hay más de una opción a seleccionar
-                            -->
-                            <% pregunta.res_val.forEach(function(resp, index) { %>
-
-                                <%- include('partials/checkbox', {valor: pregunta.res_id[index], texto: resp,
-                                enc: pregunta.enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-
-                                <!-- <% if(pregunta.res_va9 != null && pregunta.res_va9 != ''){ %>
-                                    <%- include('partials/checkbox', {valor: '9', texto: pregunta.res_va9,
-                                    enc: valores[0].enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop}) %>
-                                <% } %> -->
-                                <% if(pregunta.res_tip[index] == 'T'){ %>
-                                    <%- include('partials/input', {id: pregunta.res_id[index]}) %>
-                                <% } %>
-                                 
-                            <% }) %>
-
-                        <% } else { %>
+                        <% if ((pregunta.pre_nop == 1 && pregunta.pre_ope == '=') || (pregunta.pre_nop == 2 && pregunta.pre_ope == '<')){ %>
                             <!--
                                 Radiobutton si sólo hay una opción a seleccionar 
                             -->
@@ -213,10 +213,19 @@
                                 <%- include('partials/radiobutton', {valor: pregunta.res_id[index], texto: resp,
                                 enc: pregunta.enc_num, preg: pregunta.pre_num}) %>
                             
-                                <!-- <% if(pregunta.res_va9 != null && pregunta.res_va9 != ''){ %>
-                                    <%- include('partials/radiobutton', {valor: '9', texto: pregunta.res_va9,
-                                    enc: valores[0].enc_num, preg: pregunta.pre_num}) %>
-                                <% } %> -->
+                                <% if(pregunta.res_tip[index] == 'T'){ %>
+                                    <%- include('partials/input', {id: pregunta.res_id[index]}) %>
+                                <% } %>
+                            <% }) %>
+                        <% } else { %>
+                            <!--
+                                Checkbox si hay más de una opción a seleccionar
+                            -->
+                            <% pregunta.res_val.forEach(function(resp, index) { %>
+
+                                <%- include('partials/checkbox', {valor: pregunta.res_id[index], texto: resp,
+                                enc: pregunta.enc_num, preg: pregunta.pre_num, nopc: pregunta.pre_nop, oper: pregunta.pre_ope}) %>
+
                                 <% if(pregunta.res_tip[index] == 'T'){ %>
                                     <%- include('partials/input', {id: pregunta.res_id[index]}) %>
                                 <% } %>

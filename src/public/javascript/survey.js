@@ -147,6 +147,7 @@ $(function () {
 
         var pregunta = [];
         var numopciones = [];
+        var operador = [];
         var respuestas = [];
         var respondido = [];
         var txt_adic = [];
@@ -163,6 +164,7 @@ $(function () {
 
                 pregunta = [ $(this).attr('tagpreg') ];
                 numopciones = [ $(this).attr('tagnopc') ];
+                operador = [ $(this).attr('tagoper') ];
                 respuestas = [ $(this).attr('tagrespuesta') ];
                 respondido = [ isChecked ];
                 txt_adic.push( '' );
@@ -181,6 +183,7 @@ $(function () {
     
                     pregunta.push( $(this).attr('tagpreg') );
                     numopciones.push( $(this).attr('tagnopc') );
+                    operador.push( $(this).attr('tagoper') );
                     respuestas.push( $(this).attr('tagrespuesta') );
                     respondido.push( isChecked );
                     txt_adic.push( '' );
@@ -192,6 +195,8 @@ $(function () {
         // console.log(pregunta);
         // console.log('numopciones:');
         // console.log(numopciones);
+        // console.log('operadores:');
+        // console.log(operador);
         // console.log('respuestas:');
         // console.log(respuestas);
         // console.log('respondido:');
@@ -201,6 +206,7 @@ $(function () {
 
         encuesta.pregunta = pregunta;
         encuesta.numopciones = numopciones;
+        encuesta.operador = operador;
         encuesta.respuestas = respuestas;
         encuesta.respondido = respondido;
         encuesta.txt_adic = txt_adic;
@@ -235,32 +241,68 @@ $(function () {
         for (i=0; i<pregunta.length && hayError == -1; i++){
             if (!primero) {
                 if (pregunta[i] != pregunta[i-1] || i == pregunta.length-1) {
-                    // Cambio de pregunta sin finalizar vector
+                    
+                    //
+                    // si cambio de pregunta sin finalizar vector
                     if (i != pregunta.length-1) {
 
-                        // daremos error si no se ha conntestado ninguna o si no coincide el número de respuestas
-                        if (!hay_una || respondidas != numopciones[i-1]) {
-                            if (numopciones[i-1] > 1 && hay_una) {
-                                por_numero = true;
-                            }
+                        // daremos error si no se ha contestado ninguna o si no coincide el número de respuestas
+                        switch(operador[i-1]) {
+                            case '=':
+                                if (respondidas != numopciones[i-1]) {
+                                    por_numero = true;
+                                }
+                            break;
+                            case '<':
+                                if (respondidas >= numopciones[i-1]) {
+                                    por_numero = true;
+                                }
+                            break;
+                            default:  // '>'
+                                if (respondidas <= numopciones[i-1]) {
+                                    por_numero = true;
+                                }
+                        }
+
+                        if (!hay_una || por_numero) {
+                            // if (numopciones[i-1] > 1 && hay_una) por_numero=true;
                             hayError = pregunta[i-1];
                         } else {
+                            // si no hay error reiniciamos "hay_una" y "respondidas" con la respuesta leída
                             hay_una = respondido[i];
                             respondidas = hay_una ? 1 : 0;
                         }
                     } else {
-                        // Fin del vector
+                        //
+                        // Si fin de cuestionario
                         if (respondido[pregunta.length-1]) {
+                            hay_una = true;
                             respondidas++;
                         }
 
-                        if (!hay_una && !respondido[pregunta.length-1]) {
+                        if (!hay_una) {
                             hayError = pregunta[pregunta.length-1];
-                        }
-                        if (respondidas != numopciones[pregunta.length-1]) {
-                            hayError = pregunta[pregunta.length-1];
-                            if (hay_una) {
-                                por_numero = true;
+                        } else {
+                            // daremos error si no se ha contestado ninguna o si no coincide el número de respuestas
+                            switch(operador[pregunta.length-1]) {
+                                case '=':
+                                    if (respondidas != numopciones[pregunta.length-1]) {
+                                        por_numero = true;
+                                    }
+                                break;
+                                case '<':
+                                    if (respondidas >= numopciones[pregunta.length-1]) {
+                                        por_numero = true;
+                                    }
+                                break;
+                                default:  // '>'
+                                    if (respondidas <= numopciones[pregunta.length-1]) {
+                                        por_numero = true;
+                                    }
+                            }
+
+                            if (por_numero) {
+                                hayError = pregunta[pregunta.length-1];
                             }
                         }
                     }
