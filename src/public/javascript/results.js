@@ -29,7 +29,7 @@ const getOptionChart = (resp) => {
         },
         series: [
             {
-              name: 'Survey',
+              name: resp.preg_tit,
               type: 'pie',
               radius: ['30%', '50%'],
               avoidLabelOverlap: false,
