@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/surveybe.js",
-    "node": "npx nodemon ./src/surveybe.js"
+    "dev": "nodemon ./src/surveybe.js"
   },
   "keywords": [],
   "author": "sdr",

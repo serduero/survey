@@ -50,4 +50,13 @@ input.form-control {
   height: 200px;
 }
 
+.chart {
+  width: 100%;
+  min-height: 200px;
+}
+
+.blank_row
+{
+    height: 6px !important; /* overwrites any other rules */
+}
 

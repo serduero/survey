@@ -9,7 +9,8 @@
 </head>
 
 <body>
-  <div class="container d-flex justify-content-center align-items-center">
+  <!-- <div class="container d-flex justify-content-center align-items-center"> -->
+  <div class="container d-flex align-items-center"></div>
     <div class="card bg-dark textw-white text-center">
         <% if(!hay){ %>
             <!-- Si no hay resultados -->
@@ -33,45 +34,61 @@
                 </h3>
             </div>
             <!-- listamos todos los valores obtenidos -->
+            <% results.forEach(function(pregunta, indpreg) { %>
+                <!-- Para cada pregunta -->
+                <div class="container">
+                    <div class="row">
+                        <!-- Primera coluumna con la pregunta y resultados numéricos -->
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="card bg-dark textw-white text-start mb-2">
+                                <!-- texto de la pregunta -->
+                                <span class="container ml-3 mr-3 bg-primary text-white rounded">
+                                    <p class="mt-1 mb-2"> <%= pregunta.preg_tit %>  </li>
+                                </span>
 
-            <div class="card bg-dark textw-white text-start">
-                <% results.forEach(function(pregunta) { %>
-                    <!-- texto de la pregunta -->
-                    <span class="container ml-3 mr-3 bg-primary text-white rounded">
-                        <p class="mt-1 mb-2"> <%= pregunta.preg_tit %>  </li>
-                    </span>
-
-                    <!-- respuestas con el valor actual -->
-                    <% pregunta.resp_tit.forEach(function(item,index){ %>
-                        <div class="d-flex flex-row bd-highlight mb-1 justify-content-between bg-info text-black rounded">
-                            <div 
-                            <% if(pregunta.resp_num[index]==0){ %>
-                                class="p-2 m-0 bd-highlight" style="color:grey"
-                            <% } else { %>
-                                class="p-2 m-0 bd-highlight"
-                            <% } %>
-                            >
-                                <%= item %> <% if(pregunta.tipo[index]=='T'){ %> ...<% } %>
-                            </div>
-                            <div 
-                            <% if(pregunta.resp_num[index]==0){ %>
-                                class="p-2 m-0 bd-highlight h4" style="color:grey"
-                            <% } else { %>
-                                class="p-2 m-0 bd-highlight h3"
-                            <% } %>
-                            >
-                                <%= pregunta.resp_num[index] %>
+                                <!-- respuestas con el valor actual -->
+                                <% pregunta.resp_tit.forEach(function(item,index){ %>
+                                    <div class="d-flex flex-row bd-highlight mb-1 justify-content-between bg-info text-black rounded">
+                                        <div 
+                                        <% if(pregunta.resp_num[index]==0){ %>
+                                            class="p-2 m-0 bd-highlight" style="color:grey"
+                                        <% } else { %>
+                                            class="p-2 m-0 bd-highlight"
+                                        <% } %>
+                                        >
+                                            <%= item %> <% if(pregunta.tipo[index]=='T'){ %> ...<% } %>
+                                        </div>
+                                        <div 
+                                        <% if(pregunta.resp_num[index]==0){ %>
+                                            class="p-2 m-0 bd-highlight h4" style="color:grey"
+                                        <% } else { %>
+                                            class="p-2 m-0 bd-highlight h3"
+                                        <% } %>
+                                        >
+                                            <%= pregunta.resp_num[index] %>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                                <div class="blank_row"></div>
                             </div>
                         </div>
-                    <% }) %>
 
-                <% }); %>
-            </div>
+                        <!-- Segunda columna con un gráfico -->
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div id="chart<%= indpreg %>" class="chart"></div>
+                        </div>
+
+                    </div>   <!-- row -->
+                </div>  <!-- container -->
+            <% }); %>
         <% } %>
     </div>
   </div>
 
   <%- include('partials/navtornar', {idioma: idioma}) %>
-  <script src="/javascript/results.js"> </script>
+  <script src="/javascript/results.js" total="<%= results.length %>" resp="<%= JSON.stringify(results) %>"> </script>
+   
+  <!-- Apache Echarts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 import { readdir } from 'fs';
 
-const reqImags = (req, res) => {
+export const reqImags = (req, res) => {
 
   if (req.headers['id']) {
       let idUsuario = req.headers['id'];
@@ -22,4 +22,4 @@ const reqImags = (req, res) => {
   }
 }
 
-export default reqImags;
+// export default { reqImags };

@@ -13,7 +13,7 @@ import isrtImag from '../controllers/isrtImag.js';
 import delImag from '../controllers/delImag.js';
 import mImage from '../controllers/multer.js';
 import sendMail from '../controllers/sendMail.js';
-import reqImags from '../controllers/reqImags.js';
+import { reqImags } from '../controllers/reqImags.js';
 
 // Control de acceso
 router.all('*', control);
