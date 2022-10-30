@@ -1,3 +1,7 @@
+// Recogemos los datos que vienen de la página sobre el encuestado
+var cajetines = document.currentScript.getAttribute('cajetines');
+var exclusiones = document.currentScript.getAttribute('exclusiones');
+
 // DOM cargado
 $(function () {
     // Se selecciona volver
@@ -20,6 +24,130 @@ $(function () {
         treureMsg();
     });
 
+    // Tratamiento tras seleccionar un elemento de las listas
+    $("#listbloc a").on("click", function () {
+        var seleccionado = $(this).data('pdsa-dropdown-val');
+        var idDato = Number($(this).attr("id").split("val")[1]);
+        var cajNum = $(this).attr("cajnum");
+         
+        // Se pone el seleccionado en el cajetín
+        $(`#valch${cajNum}`).html(seleccionado);
+
+        // Tratamos las posibles exclusiones
+        var excl = JSON.parse(exclusiones);
+        var tieneExclusion = excl[0].exc_id1.includes(idDato) || 
+                             excl[0].exc_id2.includes(idDato);
+
+
+        // Si tiene exclusiones eliminamos el valor de los otros cajetines
+
+        // vemos si es un elemento del primer vector: en ese caso eliminamos del 2º vector/cajetín
+        // y aprovechamos para dejarlo oculto o visible el resto
+        for (var i1=0; i1<excl[0].exc_id1.length; i1++) {
+            // console.log('bucle1');
+            // console.log('indice donde está: ' + i1);
+            
+            // me posiciono en el otro cajetín-elemento que contenciona
+            var valorCaj = $(`#val${excl[0].exc_id2[i1]}`);
+                
+            if (tieneExclusion && excl[0].exc_id1[i1] == idDato) {
+                var cajnum = valorCaj.attr("cajnum");
+                // console.log('cajnum del otro cajetín: ' + cajnum);
+
+                // posiciono en el cajetín que contenciona
+                var cajet = $(`#valch${cajnum}`);
+                
+                // console.log('valor del cajetín contencionado: ' + cajet.html().trim());
+                // console.log('valor del cajetín contencionado no permitido: ' + valorCaj.html());
+
+                // Lo quitamos si está seleccionado
+                if (valorCaj.html() == cajet.html().trim()) {
+                    // console.log('lo cambio ' + cajet.attr("defecto"));
+                    cajet.html(cajet.attr("defecto"));
+                }
+            }
+        }
+
+        // vemos si es un elemento del segundo vector: en ese caso eliminamos del 1º vector/cajetín
+        for (var i2=0; i2<excl[0].exc_id2.length; i2++) {
+            // console.log('bucle2');
+            // console.log('indice donde está: ' + i2);
+            
+            // me posiciono en el otro cajetín-elemento que contenciona
+            var valorCaj = $(`#val${excl[0].exc_id1[i2]}`);
+            
+            if (tieneExclusion && excl[0].exc_id2[i2] == idDato) {
+                var cajnum = valorCaj.attr("cajnum");
+                // console.log('cajnum del otro cajetín: ' + cajnum);
+                
+                // posiciono en el cajetín que contenciona
+                var cajet = $(`#valch${cajnum}`);  
+                    
+                // console.log('valor del cajetín contencionado: ' + cajet.html().trim());
+                // console.log('valor del cajetín contencionado no permitido: ' + valorCaj.html());
+                if (valorCaj.html() == cajet.html().trim()) {
+                    // console.log('lo cambio ' + cajet.attr("defecto"));
+                    cajet.html(cajet.attr("defecto"));
+                }
+            } 
+        }
+
+        // recorremos todos los cajetines y los ponemos visibles todos sus valores
+        var cajs = JSON.parse(cajetines);
+
+        // console.log('visibles todos');
+        // console.log(cajs);
+        for(var j=0; j<cajs.length; j++){
+            if (cajs[j].caj_tipo == "CH") {
+                // console.log(cajs[j].val_idDato);
+                for (var k=0; k<cajs[j].val_idDato.length; k++){
+                    $(`#val${cajs[j].val_idDato[k]}`).show();
+                    // console.log(a.html());
+                }
+            }
+        }
+
+        // recorremos las exclusiones y ocultamos
+        for(var j=0; j<cajs.length; j++){
+            if (cajs[j].caj_tipo == "CH") {
+                // miramos si este cajetín está ya seleccionado
+                var a =  $(`#valch${cajs[j].caj_num}`);
+                var selec = a.html().trim();
+                
+                if (selec != a.attr("defecto").trim()) {
+                    // Si ya seleccionado ocultamos lo que proceda al resto
+                    
+                    var index = cajs[j].val_txt.indexOf(a.html().trim());
+                    // en cajs[j].val_idDato[index] está el id del elemento seleccionado en
+                    // este cajetín
+                    var dato = Number(cajs[j].val_idDato[index]);
+                    // console.log('idDato a mirar sus exclusiones: ' + dato);
+
+                    if (excl[0].exc_id1.includes(dato)) {
+                        for (var i1=0; i1<excl[0].exc_id1.length; i1++) {
+                            if (excl[0].exc_id1[i1] == dato) {
+                                // ocultamos su exclusión
+                                $(`#val${excl[0].exc_id2[i1]}`).hide();
+                            }
+                        }
+                    }
+
+                    // console.log('Está en excl2: ' +excl[0].exc_id2.includes(dato));
+                    if (excl[0].exc_id2.includes(dato)) {
+                        for (var i2=0; i2<excl[0].exc_id2.length; i2++) {
+                            if (excl[0].exc_id2[i2] == dato) {
+                                // console.log('está en '+i2);
+                                // ocultamos su exclusión
+                                $(`#val${excl[0].exc_id1[i2]}`).hide();
+                                // console.log('ocultamos: ' +  $(`#val${excl[0].exc_id1[i2]}`).html());
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
     // En caso de pulsar "+info" mostramos las observaciones en una alerta
     $(".helpi").each(function(){
         $(this).on('click', function() {
@@ -33,109 +161,96 @@ $(function () {
         event.preventDefault();
         
         //
-        // Validamos bloque, piso y puerta informados y ok's
+        // Validamos que todas los cajetines se han informado
         //
-        var strplaza = $('#plaza').length ? $("#plaza").val().trim() : '';
-        
-        var strbloc =  $('#bloc').length ?
-                         $("#bloc").html().trim() :
-                         $('#blocfix').length ?
-                           $("#blocfix").html().trim() :
-                           '';
+        var cajs = JSON.parse(cajetines);
+        var msgtxt = '', encuestado = '';
 
-        var strpis =  $('#pis').length ? $("#pis").html().trim() : '';
-        var strporta =  $('#porta').length ? $("#porta").html().trim() : '';
+        // console.log('enviando form');
+        // console.log(cajs);
 
-        // console.log(strplaza);
-        // console.log(strbloc);
-        // console.log(strpis);
-        // console.log(strporta);
-
-        var msgtxt = idioma == 0 ? 'No informat el Bloc' : 'No informado el Bloque';
-
-        // Validamos bloque, piso y puerta se han informado en caso de estar
-        if( strbloc == 'Bloc' || strbloc == 'Bloque') {
-            $("#msgerr").html(msgtxt);
-            $("#msgerr").removeClass('d-none').addClass('d-block');
-            return false;
-        } else {
-            if( strpis == 'Pis' || strpis == 'Piso') {
-                msgtxt = idioma == 0 ? 'No informat el Pis' : 'No informado el Piso';
-                $("#msgerr").html(msgtxt);
-                $("#msgerr").removeClass('d-none').addClass('d-block');
-                return false;
-            } else {
-                if( strporta == 'Porta' || strporta == 'Puerta') {
-                    msgtxt = idioma == 0 ? 'No informada la Porta' : 'No informada la Puerta';
-                    $("#msgerr").html(msgtxt);
-                    $("#msgerr").removeClass('d-none').addClass('d-block');
-                    return false;
+        for(var j=cajs.length-1; j>=0; j--){
+            // Si es campo libre, que tenga algo
+            if (cajs[j].caj_tipo == "LI") {
+                var a =  $(`#vallib${cajs[j].caj_num}`);
+                
+                if (a.val().trim() == '') {
+                    msgtxt = idioma == 0 ? 'No informat ' : 'No informado ';
+                    msgtxt += cajs[j].caj_lit;
+                } else {
+                    // cambiamos todos los ~ por -
+                    encuestado = a.val().trim().replace(/~/g, "-") + encuestado;
                 }
             }
-        }
-
-        //
-        // Validamos que se haya indicado una plaza de parking y sea correcta
-        //
-        if ($('#plaza').length) {
-            if (strplaza == '') {
-                msgtxt = idioma == 0 ? 'No informada la plaça de parking' : 'No informada la plaza de parking';
-                $("#msgerr").html(msgtxt);
-                $("#msgerr").removeClass('d-none').addClass('d-block');
-                return false;
-            }else {
-                // y que sólo contenga números
-                let isnum = /^\d+$/.test(strplaza);
-                if(!isnum) {
-                    msgtxt = idioma == 0 ? 'El número de plaça de parking no és correcte' : 'Número de plaza de parking no es correcto';
-                    $("#msgerr").html(msgtxt);
-                    $("#msgerr").removeClass('d-none').addClass('d-block');
-                    return false;
+                     
+            // Si es lista de valores se ha debido seleccionar uno
+            if (cajs[j].caj_tipo == "CH") {
+                var a =  $(`#valch${cajs[j].caj_num}`);
+                
+                if (a.html().trim() == a.attr("defecto").trim()) {
+                    msgtxt = idioma == 0 ? 'No informat ' : 'No informado ';
+                    msgtxt += cajs[j].caj_lit;
                 } else {
-                    if (isNaN(parseFloat(strplaza)) || !isFinite(strplaza)) {
-                        msgtxt = idioma == 0 ? 'Plaça de parking incorrecta' : 'Plaza de parking incorrecta';
-                        $("#msgerr").html(msgtxt);
-                        $("#msgerr").removeClass('d-none').addClass('d-block');
-                        return false;
+                    encuestado = a.html().trim() + encuestado;
+                }
+            }
+             
+            // Si es un número que esté informado y esté dentro del rango
+            if (cajs[j].caj_tipo == "NU") {
+                var a =  $(`#valnum${cajs[j].caj_num}`);
+                var numero = a.val().trim();
+                
+                if (numero == '') {
+                    msgtxt = idioma == 0 ? 'No informat ' : 'No informado ';
+                    msgtxt += cajs[j].caj_lit;
+                } else {
+                    // que sólo contenga números
+                    let isnum = /^\d+$/.test(numero);
+                    if(!isnum) {
+                        msgtxt = idioma == 0 ? 'Número incorrecte (' : 'Número incorrecto (';
+                        msgtxt += cajs[j].caj_lit.trim() + ')';
                     } else {
-                        // Validamos posibles decimanles
-                        const num_dec = parseFloat(strplaza);
-                        const num_int = parseInt(strplaza);
-                        if (num_dec != num_int) {
-                            msgtxt = idioma == 0 ? 'Número de plaça de parking incorrecta' : 'Número de plaza de parking incorrecto';
-                            $("#msgerr").html(msgtxt);
-                            $("#msgerr").removeClass('d-none').addClass('d-block');
-                            return false;
+                        if (isNaN(parseFloat(numero)) || !isFinite(numero)) {
+                            msgtxt = idioma == 0 ? 'Número incorrecte (' : 'Número incorrecto (';
+                            msgtxt += cajs[j].caj_lit.trim() + ')';
                         } else {
-                            // Y que sea un número OK
-                            if (num_int < 1 || num_int > 77) {
-                                msgtxt = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
-                                $("#msgerr").html(msgtxt);
-                                $("#msgerr").removeClass('d-none').addClass('d-block');
-                                return false;
+                            // Validamos posibles decimales
+                            const num_dec = parseFloat(numero);
+                            const num_int = parseInt(numero);
+                            if (num_dec != num_int) {
+                                msgtxt = idioma == 0 ? 'Número incorrecte (' : 'Número incorrecto (';
+                                msgtxt += cajs[j].caj_lit.trim() + ')';
+                            } else {
+                                // Y que sea un número OK
+                                if (numero < cajs[j].caj_min || num_int > cajs[j].caj_max) {
+                                    msgtxt = idioma == 0 ? 'Número fóra de rang (' : 'Número fuera de rango (';
+                                    msgtxt += cajs[j].caj_lit.trim() + ').  ';
+                                    if (idioma == 0) {
+                                        msgtxt = msgtxt + 'Mín: ' + cajs[j].caj_min + '  Màx:' + cajs[j].caj_max;
+                                    }
+                                    else {
+                                        msgtxt = msgtxt + 'Mín: ' + cajs[j].caj_min + '  Máx:' + cajs[j].caj_max;
+                                    }
+                                } else {
+                                    encuestado = numero + encuestado;
+                                }
                             }
                         }
                     }
                 }
             }
-        } else {
-            // Validamos la coherencia entre bloque y piso
-            if (strbloc == '2A' || strbloc == '2B') {
-                if (strpis == 'B') {
-                    msgtxt = idioma == 0 ? 'No hi ha baixos en aquest Bloc' : 'No hay bajos en aquest Bloque';
-                    $("#msgerr").html(msgtxt);
-                    $("#msgerr").removeClass('d-none').addClass('d-block');
-                    return false;
-                }
-            } else {
-                if (strpis == '4' || strpis == '5') {
-                    msgtxt = idioma == 0 ? 'Solament hi ha 3 pisos en aquest Bloc' : 'Solamente hay pisos en este Bloque';
-                    $("#msgerr").html(msgtxt);
-                    $("#msgerr").removeClass('d-none').addClass('d-block');
-                    return false;
-                }
+
+            if (j>0) {
+                encuestado = '~' + encuestado;
             }
         }
+
+        if (msgtxt != '') {
+            $("#msgerr").html(msgtxt);
+            $("#msgerr").removeClass('d-none').addClass('d-block');
+            return;
+        } 
+        // console.log(encuestado);
 
         //
         // validamos el número de opciones informadas
@@ -345,7 +460,6 @@ $(function () {
         }
 
         // Todo OK: enviamos las respuestas
-        // console.log('se envía: ' + strbloc + ' ' + strpis + ' ' + strporta + ' '+ strplaza);
         // console.log(encuesta);
         
         var url = `/insform/&idurl=${idurl}&id=${idioma}`;
@@ -355,7 +469,7 @@ $(function () {
         $.ajax({
             url : url,
             type: 'POST',
-            data: JSON.stringify([encuesta, strbloc, strpis, strporta, strplaza]),
+            data: JSON.stringify([encuesta, encuestado]),
             contentType: "application/json",
             // dataType   : "json",
             success: function(resp) {
@@ -374,46 +488,6 @@ $(function () {
                 }
             }
         });
-    });
-
-    // Se selecciona un elemento de la lista bloc
-    $("#listbloc a").on("click", function () {
-        // Se pone el seleccionado
-        var id = $(this).data('pdsa-dropdown-val');
-        $("#bloc").html(id);
-
-        // En caso de que haya un piso seleccionado y no exista se reinicia con "Piso"
-        // En cualquier caso se oculta para que no sea seleccionable
-
-        let piso = idioma == 0 ? 'Pis' : 'Piso';
-
-        // 2A y 2B no tienen bajos
-        if (id == '2A' || id == '2B') {
-            if ($("#pis").html() == 'B') {
-                $("#pis").html(piso);
-            };
-            $("#lbajos").hide();
-            $("#lcuatro").show();
-            $("#lcinco").show();
-        } else {
-        // El resto sólo tienen 3 alturas
-            if ($("#pis").html() == '4' || $("#pis").html() == '5') {
-                $("#pis").html(piso);
-            };
-            $("#lbajos").show();
-            $("#lcuatro").hide();
-            $("#lcinco").hide();
-        }
-    });
-    $("#listpis a").on("click", function () {
-        // Se pone el seleccionado
-        var id = $(this).data('pdsa-dropdown-val');
-        $("#pis").html(id);
-    });
-    $("#listporta a").on("click", function () {
-        // Se pone el seleccionado
-        var id = $(this).data('pdsa-dropdown-val');
-        $("#porta").html(id);
     });
 });
 

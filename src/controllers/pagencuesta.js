@@ -27,6 +27,14 @@ const putSurvey = (req, res) => {
   });
 
   const ahora = obtenerAhora();
+  
+  var preguntas = [];
+  var cajetines = [];
+  var exclusiones = [];
+   
+  var modelo = -1;
+  var nueva_fila = false;
+  var indice = 0;
 
   // Obtenemos las preguntas
   var sql =
@@ -34,6 +42,7 @@ const putSurvey = (req, res) => {
             enc.titulo as         enc_tit,
             enc.observaciones as  enc_obs,
             enc.comunidad as      enc_com,
+            enc.defModelo as      enc_mod,
 
             preg.id as            pre_num,
             preg.texto as         pre_txt,
@@ -59,28 +68,28 @@ const putSurvey = (req, res) => {
 
   // Lanzamos query y revisamos resultado
   connection.query(sql, (error, results) => {
-    if (error) throw error;
+    if (error)
+      throw error;
 
     // console.log(results);
     // console.log(results[0].titulo);
-    
     if (results.length > 0) {
       // cargamos los datos de pregunta y respuestas para pasarlos al render: una fila por pregunta
-      var preguntas = [];
-      var nueva_fila = false;
-      var indice = 0;
-       
-      for (var i = 0; i<results.length; i++ ){
+      preguntas = [];
+      nueva_fila = false;
+      indice = 0;
+
+      for (var i = 0; i < results.length; i++) {
         if (i == 0) {
           nueva_fila = true;
         }
         else {
-          if (preguntas[indice-1].pre_num == results[i].pre_num) {
+          if (preguntas[indice - 1].pre_num == results[i].pre_num) {
             // id y valor de la respuesta
-            preguntas[indice-1].res_id.push(results[i].res_id);
-            preguntas[indice-1].res_val.push(results[i].res_val);
-            preguntas[indice-1].res_tip.push(results[i].res_tip);
-             
+            preguntas[indice - 1].res_id.push(results[i].res_id);
+            preguntas[indice - 1].res_val.push(results[i].res_val);
+            preguntas[indice - 1].res_tip.push(results[i].res_tip);
+
             nueva_fila = false;
           }
           else {
@@ -91,7 +100,7 @@ const putSurvey = (req, res) => {
         // si cambio de pregunta insertamos fila nueva
         if (nueva_fila) {
           let operador = results[i].pre_ope == '=' ? 'igual' : results[i].pre_ope == '>' ? 'mayor' : 'menor';
-           
+
           preguntas.push(
             {
               enc_num: results[i].enc_num,
@@ -105,27 +114,161 @@ const putSurvey = (req, res) => {
               pre_ope: operador,
               pre_obs: results[i].pre_obs,
 
-              res_id : [ results[i].res_id ],
-              res_val: [ results[i].res_val ],
-              res_tip: [ results[i].res_tip ]
+              res_id: [results[i].res_id],
+              res_val: [results[i].res_val],
+              res_tip: [results[i].res_tip]
             }
           );
           indice++;
         }
       }
-
-      // mostramos acceso a la encuesta (hay datos)
+      // indicamos el título
       let titulo = idioma == 0 ? 'Enquesta' : 'Encuesta';
       // console.log(preguntas);
-       
-      res.render('survey', {titulo: titulo, valores: preguntas, idioma: idioma});
+
+      // Obtenemos datos del encuestado: cajetines
+      modelo = results[0].enc_mod; //  id del modelo
+      // console.log(`modelo: ${modelo}`);
+
+      sql =
+        `select caj.cajetin as    caj_num,
+                def.descrWeb as   caj_lit,
+                def.tipoDato as   caj_tipo,
+                def.min as        caj_min,
+                def.max as        caj_max,
+                def.texto as      caj_txt,
+                val.idDato as     val_idDato,
+                val.dato as       val_txt
+
+        from cajetinesModelo caj, defCajetines def
+             left join defValoresEnc val
+             on def.idDato=val.defCajetin
+
+        where caj.modelo=${modelo} and
+              caj.cajetin=def.idDato
+        
+        order by caj.cajetin asc, val.idDato asc
+        `;
+      // console.log(sql);
+
+      connection.query(sql, (error, results) => {
+        if (error)
+          throw error;
+
+        // guardamos los datos de los cajetines
+        cajetines = [];
+        nueva_fila = false;
+        indice = 0;
+  
+        for (var i = 0; i < results.length; i++) {
+          if (i == 0) {
+            nueva_fila = true;
+          }
+          else {
+            if (cajetines[indice - 1].caj_num == results[i].caj_num) {
+              // desplegable: id y su valor
+              cajetines[indice - 1].val_idDato.push(results[i].val_idDato);
+              cajetines[indice - 1].val_txt.push(results[i].val_txt);
+  
+              nueva_fila = false;
+            }
+            else {
+              nueva_fila = true;
+            }
+          }
+  
+          // si cambio de pregunta insertamos fila nueva
+          if (nueva_fila) {
+
+            cajetines.push(
+              {
+                caj_num: results[i].caj_num,
+                caj_lit: results[i].caj_lit,
+
+                caj_tipo: results[i].caj_tipo,
+
+                caj_min: results[i].caj_min,
+                caj_max: results[i].caj_max,
+                caj_txt: results[i].caj_txt,
+
+                val_idDato: results[i].val_idDato == null ?
+                  null : [ results[i].val_idDato ],
+                val_txt: results[i].val_txt == null ?
+                  null : [ results[i].val_txt ],
+              }
+            );
+            indice++;
+          }
+        }
+        // console.log(cajetines);
+
+        if (results.length > 0) {
+
+          // Obtenemos datos del encuestado: las posibles exclusiones
+          // console.log(`exclusiones del modelo: ${modelo}`);
+
+          sql =
+            `select id1 as exc_id1,
+                    id2 as exc_id2
+            from defExcepciones
+            where modelo=${modelo}
+            order by id1 asc, id2 asc
+            `;
+          // console.log(sql);
+
+          connection.query(sql, (error, results) => {
+            if (error)
+              throw error;
+
+            // guardar datos de las exclusiones
+            exclusiones = [];
+            nueva_fila = false;
+            indice = 0;
+      
+            for (var i = 0; i < results.length; i++) {
+              if (i == 0) {
+                nueva_fila = true;
+              }
+              else {
+                // desplegable: id y su valor
+                exclusiones[indice - 1].exc_id1.push(results[i].exc_id1);
+                exclusiones[indice - 1].exc_id2.push(results[i].exc_id2);
+      
+                nueva_fila = false;
+              }
+      
+              // si cambio de pregunta insertamos fila nueva
+              if (nueva_fila) {
+
+                exclusiones.push(
+                  {
+                    exc_id1: [ results[i].exc_id1 ],
+                    exc_id2: [ results[i].exc_id2 ]
+                  }
+                );
+                indice++;
+              }
+            }
+            // console.log(exclusiones);
+
+            // Finalmente montamos la pantalla con todo
+            res.render('survey', { titulo: titulo,
+              valores: preguntas,
+              cajetines: cajetines, exclusiones: exclusiones,
+              idioma: idioma });
+          });
+          connection.end();
+        }
+      });
     } else {
       // mostramos pantalla de no encuestas
-      res.render('index', {titulo: 'Sense enquestes actives', navPasw: false, hay: false,
-                           visible: 'N', idioma: 0, imagen: ''});
+      res.render('index', {
+        titulo: 'Sense enquestes actives', navPasw: false, hay: false,
+        visible: 'N', idioma: 0, imagen: ''
+      });
+      connection.end();
     }
   });
-  connection.end();
 }
 
 export default putSurvey;

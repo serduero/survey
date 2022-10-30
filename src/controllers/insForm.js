@@ -11,12 +11,7 @@ const { createConnection } = mysql;
 const insForm = (req, res) => {
 
   // console.log('en insForm');
-
   var actualizar = true;
-  const bloques = ['2A', '2B', '12C', '14B', '16A'];
-  const pisos = ['B', '1', '2', '3', '4', '5'];
-  const puertas = ['1', '2', '3'];
-  var plaza_parking = '';
   var missatge = '';
 
   let idurl = getUrlParameter('idurl',req.url);
@@ -36,79 +31,15 @@ const insForm = (req, res) => {
   // console.log(req.body[4]);
   // console.log(req.body[5]);
 
-  // Validamos el bloque, piso, puerta y plaza parking
-
   // Incompatibles entre sí
   var errortxt1 = idioma == 0 ? 'Error: inesperat' : 'Error inesperado';
-  var errortxt2 = idioma == 0 ? 'Plaça de parking incorrecta' : 'Plaza de parking incorrecta';
-  var errortxt3 = idioma == 0 ? 'Número de plaça de parking incorrecte' : 'Número de plaza de parking incorrecto';
-  var errortxt4 = idioma == 0 ? 'Plaça de parking inexistent' : 'Plaza de parking inexistente';
 
-  if (req.body[4] != '') {
-    // Si número de parking informado es de parking. Validamos todos los campos de comunidad parking
-    if (req.body[1] != '' || req.body[2] != '' || req.body[3] != '') {
-      missatge = errortxt1 + ' ' + req.body[4] + ' ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];
-      actualizar = false;
-    } else {
-      // Validamos el número del parking
-      if (isNaN(parseFloat(req.body[4])) || !isFinite(req.body[4])) {
-          missatge = errortxt2;
-          actualizar = false;
-      } else {
-          // Validamos posibles decimanles
-          const num_dec = parseFloat(req.body[4]);
-          const num_int = parseInt(req.body[4]);
-          if (num_dec != num_int) {
-              missatge = errortxt3;
-              actualizar = false;
-          } else {
-              // Y que sea un número OK
-              if (num_int < 1 || num_int > 77) {
-                  missatge = errortxt4;
-                  actualizar = false;
-              } else {
-                plaza_parking = req.body[4] + '';
-              }
-          }
-      }
-    }
-  } else {
-    // Si número de parking no informado es que no es de parking. Validamos todos los campos de comunidad no parking
-    errortxt1 = idioma == 0 ? 'Error: No està el bloc' : 'Error: No está el bloque';
-    errortxt2 = idioma == 0 ? 'Error: No està el pis' : 'Error: No está el piso';
-    errortxt3 = idioma == 0 ? 'Error: No està la porta' : 'Error: No está la puerta';
-     
-    // Si no hay parking miramos los valores ok's de bloque, piso y puerta
-    if (!bloques.includes(req.body[1])) {
-      missatge = errortxt1 + ' ' + req.body[1];
-      actualizar = false;
-    }
-    if (!pisos.includes(req.body[2])) {
-      missatge = errortxt2 + ' ' + req.body[2];
-      actualizar = false;
-    }
-    if (!puertas.includes(req.body[3])) {
-      missatge = errortxt3 + ' ' + req.body[3];
-      actualizar = false;
-    }
-
-    errortxt1 = idioma == 0 ? 'Error: No hi ha baixos en aquest Bloc' : 'Error: No hay bajos en este Bloque';
-    errortxt2 = idioma == 0 ? 'Error: Solament hi ha 3 pisos en aquest Bloc' : 'Error: Solamente hay 3 pisos en este Bloque';
-
-    // Y la coherencia entre bloque y piso
-    if (req.body[1] == '2A' || req.body[1] == '2B') {
-      if (req.body[2] == 'B') {
-          missatge = errortxt1 + ' ' + req.body[1] + ' ' + req.body[2];
-          actualizar = false;
-      }
-    } else {
-        if (req.body[2] == '4' || req.body[2] == '5') {
-            missatge = errortxt2 + ' ' + req.body[1] + ' ' + req.body[2];
-            actualizar = false;
-        }
-    }
+  // Validamos que vengan los datos del encuestado
+  if (req.body[1] == '') {
+    missatge = errortxt1;
+    actualizar = false;
   }
- 
+
   if (!actualizar) {
     res.send(missatge);
     return missatge;
@@ -117,7 +48,7 @@ const insForm = (req, res) => {
   // en datos recogemos los datos de la entrada
   const datos = req.body[0];
 
-  // console.log('quien      : ' + req.body[1] + req.body[2] + req.body[3] + plaza_parking);
+  // console.log('quien      : ' + req.body[1]);
   // console.log('id encuesta: ' + datos.id);
   // console.log('id preguntas : ' + datos.pregunta);
   // console.log('num opciones : ' + datos.numopciones);
@@ -195,22 +126,12 @@ const insForm = (req, res) => {
         var ult_leida = results.length - 1;
         var ult_entra = datos.pregunta.length - 1;
         
-        // Nos guardamos el tipo de la encuesta (qué comunidad)
-        tipo_encuesta = results[0].enc_com;
-
         // validación simple para ver que la primera y última preguntas coinciden con lo que nos llega
         if ((results[0].pre_num != datos.pregunta[0]) ||
             (results[ult_leida].pre_num != datos.pregunta[ult_entra])) {
            actualizar = false;
            missatge = idioma == 0 ? 'No coincideixen les preguntes' : 'No coinciden las preguntas';  
-        } else {
-          // Si es de parking no debe venir más que la plaza
-          if (tipo_encuesta == 'P' && (req.body[1] != '' || req.body[2] != '' || req.body[3] != '' || plaza_parking == '')) {
-            actualizar = false;
-            errortxt1 = idioma == 0 ? 'Enquesta rebuda no és correcta' : 'Encuesta recibida no es correcta';
-            missatge = errortxt1 + ' ' + req.body[1] + ' ' + req.body[2] + ' ' + req.body[3];  
-          }
-        }
+        } 
       } else {
          actualizar = false;
          missatge = idioma == 0 ? 'Sense preguntes actives' : 'Sin preguntas activas';
@@ -220,10 +141,10 @@ const insForm = (req, res) => {
       if (actualizar) {
         var i = 0;
         var objeto_ins = new Object();
-        const dato_elpiso = tipo_encuesta == 'P' ? plaza_parking : req.body[1].substr(0,2) + req.body[2] + req.body[3];
+        const dato_origen = req.body[1];
         const dato_encuesta = parseInt(datos.id);
 
-        // console.log('quien      : ' + req.body[1] + req.body[2] + req.body[3] + ' P:' + plaza_parking);
+        // console.log('quien      : ' + req.body[1]);
         // console.log('id encuesta: ' + datos.id);
         // console.log('id preguntas : ' + datos.pregunta);
         // console.log('num opciones : ' + datos.numopciones);
@@ -232,10 +153,11 @@ const insForm = (req, res) => {
         // console.log('textos adic. : ' + datos.txt_adic);
 
         // borramos los posibles valores previos si los hubiera
-        sql = `delete from respvecino where encuesta=${dato_encuesta} and piso="${dato_elpiso}"`;
+        sql = `delete from respvecino where encuesta=${dato_encuesta} and 
+              origen="${dato_origen}"`;
 
         // console.log(sql);
-        connection.query(sql, (error, results) => {
+        connection.query(sql, (error) => {
           if (error) throw error;
 
           sql = 'insert into respvecino set ?';
@@ -246,7 +168,7 @@ const insForm = (req, res) => {
               // sólo guardamos los "respondido == true"
   
               objeto_ins = {
-                piso: dato_elpiso,
+                origen: dato_origen,
                 encuesta: dato_encuesta,
                 pregunta: parseInt(datos.pregunta[i]),
                 numresp: parseInt(datos.respuestas[i]),
@@ -267,7 +189,6 @@ const insForm = (req, res) => {
         });
       } else {
         // Si no actualizar
-         
         connection.end();
 
         res.send(missatge);
