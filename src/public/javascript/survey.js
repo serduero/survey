@@ -1,5 +1,7 @@
 // Recogemos los datos que vienen de la página sobre el encuestado
 var cajetines = document.currentScript.getAttribute('cajetines');
+var cajs = JSON.parse(cajetines);
+ 
 var exclusiones = document.currentScript.getAttribute('exclusiones');
 
 // DOM cargado
@@ -24,6 +26,16 @@ $(function () {
         treureMsg();
     });
 
+    // Pulsado botón de reinicilizar datos de listas
+    $("#clean").on("click", function () {
+        for (var i=0; i<cajs.length; i++) {
+            if (cajs[i].caj_tipo == "CH") {
+                let cajet = $(`#valch${cajs[i].caj_num}`);
+                cajet.html(cajet.attr("defecto"));
+            }
+        }
+    });    
+
     // Tratamiento tras seleccionar un elemento de las listas
     $("#listbloc a").on("click", function () {
         var seleccionado = $(this).data('pdsa-dropdown-val');
@@ -37,7 +49,6 @@ $(function () {
         var excl = JSON.parse(exclusiones);
         var tieneExclusion = excl[0].exc_id1.includes(idDato) || 
                              excl[0].exc_id2.includes(idDato);
-
 
         // Si tiene exclusiones eliminamos el valor de los otros cajetines
 
@@ -93,7 +104,6 @@ $(function () {
         }
 
         // recorremos todos los cajetines y los ponemos visibles todos sus valores
-        var cajs = JSON.parse(cajetines);
 
         // console.log('visibles todos');
         // console.log(cajs);
@@ -159,11 +169,15 @@ $(function () {
     $("form").on("submit", function( event ) {
 
         event.preventDefault();
+
+        // ocultamos botón de enviar y volver
+        $("#send").hide();
+        $("#tornar").hide();
         
         //
         // Validamos que todas los cajetines se han informado
         //
-        var cajs = JSON.parse(cajetines);
+        // var cajs = JSON.parse(cajetines);
         var msgtxt = '', encuestado = '';
 
         // console.log('enviando form');

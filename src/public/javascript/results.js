@@ -2,7 +2,7 @@
 var total = document.currentScript.getAttribute('total');
 var respuestas = document.currentScript.getAttribute('resp');
 
-// Gráfico
+// Gráfico (https://echarts.apache.org/)
 const getOptionChart = (resp) => {
     // Carga de datos para el gráfico: valor numérico y el nombre de la leyenda
     var datos = [];
@@ -17,9 +17,18 @@ const getOptionChart = (resp) => {
             trigger: "item",
             triggerOn: "mousemove|click"
         },
+        grid: {
+          bottom: 'bottom',
+        },
         legend: {
-            top: '5%',
+            top: 'top',
             left: 'center',
+            padding: [
+                0,  // up
+                5, // right
+                0,  // down
+                5, // left
+            ],
             textStyle: {
                 color: "white"
             },

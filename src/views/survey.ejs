@@ -92,6 +92,15 @@
                         </div>
                     <% } %>
                 <% }) %>
+                 
+                <!-- Opción de reset de elecciones -->
+                <% if (exclusiones.length > 0) { %>
+                    <div class="btn-group ms-3 mb-3">
+                        <button type="button" class="btn btn-secondary" id="clean">
+                            <i class="fa fa-rotate-right text-info"></i>
+                        </button>
+                    </div>
+                <% } %>
 
                 <!-- Preguntas -->
                 <% valores.forEach(function(pregunta) { %>
@@ -172,7 +181,7 @@
                 <% }); %> 
                 <div class="alert alert-danger mt-3 d-none" role="alert" id="msgerr">Missatge error</div>
                  
-                <button type="submit" class="btn btn-primary btn-block mt-4">Enviar</button>
+                <button id="send" type="submit" class="btn btn-primary btn-block mt-4">Enviar</button>
             </form>
         </div>
     <!-- </div> -->
