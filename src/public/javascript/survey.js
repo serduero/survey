@@ -24,6 +24,8 @@ $(function () {
     // Quitamos mensaje de error ante cualquier click
     $(document).on('click', function(){
         treureMsg();
+        $("#send").show();
+        $("#tornar").show();
     });
 
     // Pulsado botón de reinicilizar datos de listas
