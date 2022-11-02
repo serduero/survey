@@ -21,7 +21,7 @@ $(function () {
         return false;
     }
              
-    // Quitamos mensaje de error ante cualquier click
+    // Quitamos mensaje de error ante cualquier click, y volvemos a mostrar las acciones
     $(document).on('click', function(){
         treureMsg();
         $("#send").show();
@@ -177,7 +177,7 @@ $(function () {
         $("#tornar").hide();
         
         //
-        // Validamos que todas los cajetines se han informado
+        // Validamos que todos los cajetines se han informado
         //
         // var cajs = JSON.parse(cajetines);
         var msgtxt = '', encuestado = '';
@@ -322,18 +322,18 @@ $(function () {
             }
         });
         
-        // console.log('pregunta:');
-        // console.log(pregunta);
-        // console.log('numopciones:');
-        // console.log(numopciones);
-        // console.log('operadores:');
-        // console.log(operador);
-        // console.log('respuestas:');
-        // console.log(respuestas);
-        // console.log('respondido:');
-        // console.log(respondido);
-        // console.log('textos:');
-        // console.log(txt_adic);
+        console.log('pregunta:');
+        console.log(pregunta);
+        console.log('numopciones:');
+        console.log(numopciones);
+        console.log('operador:');
+        console.log(operador);
+        console.log('respuestas:');
+        console.log(respuestas);
+        console.log('respondido:');
+        console.log(respondido);
+        console.log('txt_adic:');
+        console.log(txt_adic);
 
         encuesta.pregunta = pregunta;
         encuesta.numopciones = numopciones;
@@ -368,14 +368,36 @@ $(function () {
         var i = 0;
         var respondidas = 0;
         var por_numero = false;
+        var por_no_responder = false;
+
+        // en todos los vectores: tantos elementos como respuestas posibles
+        // pregunta: el id de la pregunta. (Tantos elementos repetidos como respuestas de la misma pregunta)
+        // numopciones: número de opciones de esa pregunta. ( idem )
+        // operador: operador de ese número de opciones < > =. ( idem )
+        // respuestas: id de cada respuesta (sin elementos repetidos)
+        // respondido: true/false según se haya o no seleccionado esa respuesta
+        // txt_adic: el texto introducido en la respuesta i-ésima (si ese elemento no permitía texto será '')
 
         for (i=0; i<pregunta.length && hayError == -1; i++){
             if (!primero) {
+
+                // para cada respuesta (excepto la primera)
+
                 if (pregunta[i] != pregunta[i-1] || i == pregunta.length-1) {
-                    
                     //
-                    // si cambio de pregunta sin finalizar vector
+                    // si cambio de pregunta o si ya hemos acabado: es cuando hacemos las validaciones
+                    //
+
+                    // si no hay nada respondido daremos ese mensaje siempre como más prioritario después
+                    if (!hay_una) {
+                        por_no_responder = true;
+                        hayError = pregunta[pregunta.length-1];
+                    }
+
+                    // si no hemos acabado el cuestionario: validamos que el número de repondidas cuadra con lo demandado
                     if (i != pregunta.length-1) {
+
+                        por_numero = false;
 
                         // daremos error si no se ha contestado ninguna o si no coincide el número de respuestas
                         switch(operador[i-1]) {
@@ -395,25 +417,25 @@ $(function () {
                                 }
                         }
 
+                        // saltará el error si no hay al menos una o si no cuadra el número
                         if (!hay_una || por_numero) {
-                            // if (numopciones[i-1] > 1 && hay_una) por_numero=true;
                             hayError = pregunta[i-1];
                         } else {
-                            // si no hay error reiniciamos "hay_una" y "respondidas" con la respuesta leída
+                            // si la pregunta anterior es OK reiniciamos "hay_una" y "respondidas" con la respuesta leída
+                            // para así evaluar al final de todas las respuestas de esta siguiente pregunta
                             hay_una = respondido[i];
                             respondidas = hay_una ? 1 : 0;
                         }
                     } else {
-                        //
-                        // Si fin de cuestionario
+                        // Si ya es el fin de cuestionario
                         if (respondido[pregunta.length-1]) {
                             hay_una = true;
                             respondidas++;
                         }
 
-                        if (!hay_una) {
-                            hayError = pregunta[pregunta.length-1];
-                        } else {
+                        if (hay_una) {
+                            por_numero = false;
+                             
                             // daremos error si no se ha contestado ninguna o si no coincide el número de respuestas
                             switch(operador[pregunta.length-1]) {
                                 case 'igual':
@@ -438,12 +460,14 @@ $(function () {
                         }
                     }
                 } else {
+                    // Si estamos en la misma pregunta sólo contamos las respondidas y actualizamos hay_una
                     if (respondido[i]) {
                         hay_una = true;
                         respondidas++;
                     }
                 }
             } else {
+                // Esto sólo se ejecuta una vez y sirve para guardar el valor inicial de hay_una y respondidas
                 primero = false;
 
                 if (respondido[i]) {
@@ -458,7 +482,7 @@ $(function () {
             // Un elemento por cada valor distinto
             const distinctPregs = [...new Set(pregunta)];
              
-            if (!por_numero) {
+            if (por_no_responder) {
                 if (distinctPregs.length>1) {
                     msgtxt = idioma == 0 ? 'Respondre totes les preguntes' : 'Responder todas las preguntas';
                     $("#msgerr").html(msgtxt);
