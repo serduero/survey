@@ -15,15 +15,9 @@ function getUrlParameter(sParam, sPageURL) {
     var sURLVariables = sPageURL.split('&'),
         sParameterName,
         i;
-    // console.log('en get url');    
-    // console.log(sParam);
-    // console.log(sPageURL);
-    // console.log(sURLVariables);
 
     for (i = 0; i < sURLVariables.length; i++) {
         sParameterName = sURLVariables[i].split('=');
-        // console.log('dentro');
-        // console.log(sParameterName);
 
         if (sParameterName[0] == sParam) {
             return sParameterName[1] == undefined ? true : decodeURIComponent(sParameterName[1]);

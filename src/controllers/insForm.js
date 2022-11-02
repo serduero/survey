@@ -10,7 +10,6 @@ const { createConnection } = mysql;
 
 const insForm = (req, res) => {
 
-  // console.log('en insForm');
   var actualizar = true;
   var missatge = '';
 
@@ -23,13 +22,6 @@ const insForm = (req, res) => {
                           idioma: 0, imagen: ''});
      return;
   }
-
-  // console.log(req.body[0]);
-  // console.log(req.body[1]);
-  // console.log(req.body[2]);
-  // console.log(req.body[3]);
-  // console.log(req.body[4]);
-  // console.log(req.body[5]);
 
   // Incompatibles entre sí
   var errortxt1 = idioma == 0 ? 'Error: inesperat' : 'Error inesperado';
@@ -48,15 +40,6 @@ const insForm = (req, res) => {
   // en datos recogemos los datos de la entrada
   const datos = req.body[0];
 
-  // console.log('quien      : ' + req.body[1]);
-  // console.log('id encuesta: ' + datos.id);
-  // console.log('id preguntas : ' + datos.pregunta);
-  // console.log('num opciones : ' + datos.numopciones);
-  // console.log('operadores   : ' + datos.operador);
-  // console.log('id respuestas: ' + datos.respuestas);
-  // console.log('respuestas   : ' + datos.respondido);
-  // console.log('textos     : ' + datos.txt_adic);
-
   // Conectamos con la base de datos
   const connection = createConnection({
     host: database.host,user: database.user,password: database.password,
@@ -72,15 +55,11 @@ const insForm = (req, res) => {
   // Miramos si la encuesta recibida es la activa
   var sql =
   `select * from encuesta where inicio<=${ahora} and fin>=${ahora} and activa="S" and idurl="${idurl}"`;
-  // console.log(sql);
 
   // Lanzamos query y revisamos resultado
   connection.query(sql, (error, results) => {
     if (error) throw error;
 
-    // console.log(results);
-    // console.log(results[0].id);
-    
     if (results.length > 0) {
       if (results[0].id != datos.id) {
         actualizar = false;
@@ -90,7 +69,6 @@ const insForm = (req, res) => {
       actualizar = false;
       missatge = idioma == 0 ? 'Cap enquesta activa' : 'Ninguna encuesta activa';
     }
-    // console.log('2 ? ' + actualizar + ' ' + missatge);
 
     // Miramos si coincide o no el id de la últ pregunta con la recibida
     // una fila por cada pregunta de la encuesta (no se mira las respuestas)
@@ -112,16 +90,12 @@ const insForm = (req, res) => {
     
     order by preg.id
     `;
-    // console.log(sql);
     
     var tipo_encuesta = '';
 
     connection.query(sql, (error, results) => {
       if (error) throw error;
   
-      // console.log('query validacion:');
-      // console.log(results);
-       
       if (results.length > 0) {
         var ult_leida = results.length - 1;
         var ult_entra = datos.pregunta.length - 1;
@@ -144,19 +118,10 @@ const insForm = (req, res) => {
         const dato_origen = req.body[1];
         const dato_encuesta = parseInt(datos.id);
 
-        // console.log('quien      : ' + req.body[1]);
-        // console.log('id encuesta: ' + datos.id);
-        // console.log('id preguntas : ' + datos.pregunta);
-        // console.log('num opciones : ' + datos.numopciones);
-        // console.log('id respuestas: ' + datos.respuestas);
-        // console.log('respuestas   : ' + datos.respondido);
-        // console.log('textos adic. : ' + datos.txt_adic);
-
         // borramos los posibles valores previos si los hubiera
         sql = `delete from respvecino where encuesta=${dato_encuesta} and 
               origen="${dato_origen}"`;
 
-        // console.log(sql);
         connection.query(sql, (error) => {
           if (error) throw error;
 
@@ -175,11 +140,9 @@ const insForm = (req, res) => {
                 adicional: datos.txt_adic[i]
               };
               
-              // console.log(objeto_ins);
-  
               connection.query(sql, objeto_ins, (error) => {
                 if (error) throw error;
-                  // console.log("grabado ok");
+                  // Grabado ok
               });
             }
           }

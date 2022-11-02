@@ -64,15 +64,12 @@ const putSurvey = (req, res) => {
     
     order by preg.id, resp.id
     `;
-  // console.log(sql);
 
   // Lanzamos query y revisamos resultado
   connection.query(sql, (error, results) => {
     if (error)
       throw error;
 
-    // console.log(results);
-    // console.log(results[0].titulo);
     if (results.length > 0) {
       // cargamos los datos de pregunta y respuestas para pasarlos al render: una fila por pregunta
       preguntas = [];
@@ -124,11 +121,9 @@ const putSurvey = (req, res) => {
       }
       // indicamos el título
       let titulo = idioma == 0 ? 'Enquesta' : 'Encuesta';
-      // console.log(preguntas);
 
       // Obtenemos datos del encuestado: cajetines
       modelo = results[0].enc_mod; //  id del modelo
-      // console.log(`modelo: ${modelo}`);
 
       sql =
         `select caj.cajetin as    caj_num,
@@ -149,7 +144,6 @@ const putSurvey = (req, res) => {
         
         order by caj.cajetin asc, val.idDato asc
         `;
-      // console.log(sql);
 
       connection.query(sql, (error, results) => {
         if (error)
@@ -200,12 +194,10 @@ const putSurvey = (req, res) => {
             indice++;
           }
         }
-        // console.log(cajetines);
 
         if (results.length > 0) {
 
           // Obtenemos datos del encuestado: las posibles exclusiones
-          // console.log(`exclusiones del modelo: ${modelo}`);
 
           sql =
             `select id1 as exc_id1,
@@ -214,7 +206,6 @@ const putSurvey = (req, res) => {
             where modelo=${modelo}
             order by id1 asc, id2 asc
             `;
-          // console.log(sql);
 
           connection.query(sql, (error, results) => {
             if (error)
@@ -249,7 +240,6 @@ const putSurvey = (req, res) => {
                 indice++;
               }
             }
-            // console.log(exclusiones);
 
             // Finalmente montamos la pantalla con todo
             res.render('survey', { titulo: titulo,

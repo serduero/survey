@@ -9,8 +9,6 @@ const control = (req, res, next) => {
     let ruta = req.params['0'].split('/')[1];
     let rutasValidas = ['isrtImag', 'delImag', 'sendMail', 'reqImags'];
     
-    // console.log('ruta: ' + ruta);
-
     if (rutasValidas.includes(ruta)) {
 
         var acc = getUrlParameter('acc',req.url);

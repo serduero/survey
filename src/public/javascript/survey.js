@@ -57,25 +57,18 @@ $(function () {
         // vemos si es un elemento del primer vector: en ese caso eliminamos del 2º vector/cajetín
         // y aprovechamos para dejarlo oculto o visible el resto
         for (var i1=0; i1<excl[0].exc_id1.length; i1++) {
-            // console.log('bucle1');
-            // console.log('indice donde está: ' + i1);
             
             // me posiciono en el otro cajetín-elemento que contenciona
             var valorCaj = $(`#val${excl[0].exc_id2[i1]}`);
                 
             if (tieneExclusion && excl[0].exc_id1[i1] == idDato) {
                 var cajnum = valorCaj.attr("cajnum");
-                // console.log('cajnum del otro cajetín: ' + cajnum);
 
                 // posiciono en el cajetín que contenciona
                 var cajet = $(`#valch${cajnum}`);
                 
-                // console.log('valor del cajetín contencionado: ' + cajet.html().trim());
-                // console.log('valor del cajetín contencionado no permitido: ' + valorCaj.html());
-
                 // Lo quitamos si está seleccionado
                 if (valorCaj.html() == cajet.html().trim()) {
-                    // console.log('lo cambio ' + cajet.attr("defecto"));
                     cajet.html(cajet.attr("defecto"));
                 }
             }
@@ -83,23 +76,17 @@ $(function () {
 
         // vemos si es un elemento del segundo vector: en ese caso eliminamos del 1º vector/cajetín
         for (var i2=0; i2<excl[0].exc_id2.length; i2++) {
-            // console.log('bucle2');
-            // console.log('indice donde está: ' + i2);
             
             // me posiciono en el otro cajetín-elemento que contenciona
             var valorCaj = $(`#val${excl[0].exc_id1[i2]}`);
             
             if (tieneExclusion && excl[0].exc_id2[i2] == idDato) {
                 var cajnum = valorCaj.attr("cajnum");
-                // console.log('cajnum del otro cajetín: ' + cajnum);
                 
                 // posiciono en el cajetín que contenciona
                 var cajet = $(`#valch${cajnum}`);  
                     
-                // console.log('valor del cajetín contencionado: ' + cajet.html().trim());
-                // console.log('valor del cajetín contencionado no permitido: ' + valorCaj.html());
                 if (valorCaj.html() == cajet.html().trim()) {
-                    // console.log('lo cambio ' + cajet.attr("defecto"));
                     cajet.html(cajet.attr("defecto"));
                 }
             } 
@@ -107,14 +94,10 @@ $(function () {
 
         // recorremos todos los cajetines y los ponemos visibles todos sus valores
 
-        // console.log('visibles todos');
-        // console.log(cajs);
         for(var j=0; j<cajs.length; j++){
             if (cajs[j].caj_tipo == "CH") {
-                // console.log(cajs[j].val_idDato);
                 for (var k=0; k<cajs[j].val_idDato.length; k++){
                     $(`#val${cajs[j].val_idDato[k]}`).show();
-                    // console.log(a.html());
                 }
             }
         }
@@ -133,7 +116,6 @@ $(function () {
                     // en cajs[j].val_idDato[index] está el id del elemento seleccionado en
                     // este cajetín
                     var dato = Number(cajs[j].val_idDato[index]);
-                    // console.log('idDato a mirar sus exclusiones: ' + dato);
 
                     if (excl[0].exc_id1.includes(dato)) {
                         for (var i1=0; i1<excl[0].exc_id1.length; i1++) {
@@ -144,15 +126,11 @@ $(function () {
                         }
                     }
 
-                    // console.log('Está en excl2: ' +excl[0].exc_id2.includes(dato));
                     if (excl[0].exc_id2.includes(dato)) {
                         for (var i2=0; i2<excl[0].exc_id2.length; i2++) {
                             if (excl[0].exc_id2[i2] == dato) {
-                                // console.log('está en '+i2);
                                 // ocultamos su exclusión
                                 $(`#val${excl[0].exc_id1[i2]}`).hide();
-                                // console.log('ocultamos: ' +  $(`#val${excl[0].exc_id1[i2]}`).html());
-
                             }
                         }
                     }
@@ -181,9 +159,6 @@ $(function () {
         //
         // var cajs = JSON.parse(cajetines);
         var msgtxt = '', encuestado = '';
-
-        // console.log('enviando form');
-        // console.log(cajs);
 
         for(var j=cajs.length-1; j>=0; j--){
             // Si es campo libre, que tenga algo
@@ -266,8 +241,6 @@ $(function () {
             $("#msgerr").removeClass('d-none').addClass('d-block');
             return;
         } 
-        // console.log(encuestado);
-
         //
         // validamos el número de opciones informadas
         //
@@ -322,19 +295,6 @@ $(function () {
             }
         });
         
-        console.log('pregunta:');
-        console.log(pregunta);
-        console.log('numopciones:');
-        console.log(numopciones);
-        console.log('operador:');
-        console.log(operador);
-        console.log('respuestas:');
-        console.log(respuestas);
-        console.log('respondido:');
-        console.log(respondido);
-        console.log('txt_adic:');
-        console.log(txt_adic);
-
         encuesta.pregunta = pregunta;
         encuesta.numopciones = numopciones;
         encuesta.operador = operador;
@@ -342,9 +302,6 @@ $(function () {
         encuesta.respondido = respondido;
         encuesta.txt_adic = txt_adic;
 
-        // console.log('encuesta con todos los bloques:');
-        // console.log(encuesta);
-         
         // Si alguna pregunta es con texto, y lo tiene, y no se ha seleccionado se da error
         // sin embargo permitiremos seleccionar una respuesta con texto y no poner nada en el cajetín
         var incoherencia = false;
@@ -500,11 +457,8 @@ $(function () {
         }
 
         // Todo OK: enviamos las respuestas
-        // console.log(encuesta);
         
         var url = `/insform/&idurl=${idurl}&id=${idioma}`;
-
-        // console.log(url);
 
         $.ajax({
             url : url,

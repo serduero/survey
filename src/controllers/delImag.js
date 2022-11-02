@@ -2,16 +2,11 @@ import { unlink, existsSync, readdir, unlinkSync } from 'fs';
 
 const delImag = (req, res) => {
 
-    // console.log('en delete');
-    // console.log(req.headers['file']);
-
     if (req.headers['file'][0] === '*') {
         
         let idUsuario = req.headers['file'].slice(1);
         var numero = 0;
          
-        // console.log(idUsuario);
-
         readdir('./src/public/images/', async (err, files) => {
             if (err) throw err;
 
@@ -23,7 +18,6 @@ const delImag = (req, res) => {
                 
               if (file.split('-')[1] == idUsuario) {
                 fichero = './src/public/images/' + file;
-                // console.log('--> ', fichero);
 
                 unlinkSync(fichero, (err) => {
                     if (err) {

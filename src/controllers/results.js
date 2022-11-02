@@ -50,14 +50,9 @@ const getResults = (req, res) => {
 
    order by preg.id, resp.id`;
 
-   //  console.log(sql);
-
    // Lanzamos query y revisamos resultado
    connection.query(sql, (error, results) => {
     if (error) throw error;
-
-    // console.log(results);
-    // console.log(results[0].enc_titulo);
 
     if (results.length > 0) {
         var preg_resul = [];
@@ -96,8 +91,6 @@ const getResults = (req, res) => {
             indice++;
           }
         }
-        // console.log('vector a render:');
-        // console.log(preg_resul);
 
         // mostramos los resultados
         var tit = idioma == 0 ? 'Resultats' : 'Resultados';
