@@ -28,19 +28,34 @@ $(function () {
     $("#tornar").show();
   });
 
-  // Pulsado botón de reinicilizar datos de listas
+  // Pulsado botón de reinicilizar datos
   $("#clean").on("click", function () {
     for (var i = 0; i < cajs.length; i++) {
+      // Inicializamos las listas y sus elementos
       if (cajs[i].caj_tipo == "CH") {
         // Ponemos el valor por defecto
         let cajet = $(`#valch${cajs[i].caj_num}`);
         cajet.html(cajet.attr("defecto"));
-         
+
         // Y ponemos como visibles todas sus opciones
         for (var j = 0; j < cajs[i].val_idDato[j]; j++) {
           let cajet_valor = $(`#val${cajs[i].val_idDato[j]}`);
           cajet_valor.show();
         }
+      }
+
+      // Inicializamos los campos numéricos
+      if (cajs[i].caj_tipo == "NU") {
+        // Campo a blanco
+        let cajet = $(`#valnum${cajs[i].caj_num}`);
+        cajet.val("");
+      }
+
+      // Inicializamos los campos de texto libre
+      if (cajs[i].caj_tipo == "LI") {
+        // Campo a blanco
+        let cajet = $(`#vallib${cajs[i].caj_num}`);
+        cajet.val("");
       }
     }
   });
