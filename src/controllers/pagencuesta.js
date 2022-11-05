@@ -43,6 +43,7 @@ const putSurvey = (req, res) => {
             enc.observaciones as  enc_obs,
             enc.comunidad as      enc_com,
             enc.defModelo as      enc_mod,
+            enc.usuario as        enc_usu,
 
             preg.id as            pre_num,
             preg.texto as         pre_txt,
@@ -121,6 +122,7 @@ const putSurvey = (req, res) => {
       }
       // indicamos el título
       let titulo = idioma == 0 ? 'Enquesta' : 'Encuesta';
+      let usuario = results[0].enc_usu;
 
       // Obtenemos datos del encuestado: cajetines
       modelo = results[0].enc_mod; //  id del modelo
@@ -138,9 +140,11 @@ const putSurvey = (req, res) => {
         from cajetinesModelo caj, defCajetines def
              left join defValoresEnc val
              on def.idDato=val.defCajetin
+               and val.usuario=def.usuario
 
         where caj.modelo=${modelo} and
-              caj.cajetin=def.idDato
+              caj.cajetin=def.idDato and
+              def.usuario=${usuario}
         
         order by caj.cajetin asc, val.idDato asc
         `;
