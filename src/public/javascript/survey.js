@@ -38,10 +38,14 @@ $(function () {
         cajet.html(cajet.attr("defecto"));
 
         // Y ponemos como visibles todas sus opciones
-        for (var j = 0; j < cajs[i].val_idDato[j]; j++) {
+        for (var j = 0; j < cajs[i].val_idDato.length; j++) {
           let cajet_valor = $(`#val${cajs[i].val_idDato[j]}`);
           cajet_valor.show();
+          $(`#val${cajs[i].val_idDato[j]}`).attr("oc", "no");
         }
+
+        // si el cajetín no estaba lo volvemos a poner
+        $(`#valch${cajs[i].caj_num}`).removeClass("d-none");
       }
 
       // Inicializamos los campos numéricos
@@ -113,11 +117,11 @@ $(function () {
     }
 
     // recorremos todos los cajetines y los ponemos visibles todos sus valores
-
     for (var j = 0; j < cajs.length; j++) {
-      if (cajs[j].caj_tipo == "CH") {
+      if (cajs[j].caj_tipo == "CH") {   
         for (var k = 0; k < cajs[j].val_idDato.length; k++) {
           $(`#val${cajs[j].val_idDato[k]}`).show();
+          $(`#val${cajs[j].val_idDato[k]}`).attr("oc", "no");
         }
       }
     }
@@ -142,6 +146,7 @@ $(function () {
               if (excl[0].exc_id1[i1] == dato) {
                 // ocultamos su exclusión
                 $(`#val${excl[0].exc_id2[i1]}`).hide();
+                $(`#val${excl[0].exc_id2[i1]}`).attr("oc", "si");
               }
             }
           }
@@ -151,9 +156,32 @@ $(function () {
               if (excl[0].exc_id2[i2] == dato) {
                 // ocultamos su exclusión
                 $(`#val${excl[0].exc_id1[i2]}`).hide();
+                $(`#val${excl[0].exc_id1[i2]}`).attr("oc", "si");
               }
             }
           }
+        }
+      }
+    }
+
+    // recorremos todos los cajetines: si alguno no tiene posibilidad de valor lo ocultamos
+    var hayUnoVisibleLista = false;
+    for (var k = 0; k < cajs.length; k++) {
+      if (cajs[k].caj_tipo == "CH") {
+        hayUnoVisibleLista = false;
+        for (var l = 0; l < cajs[k].val_idDato.length && !hayUnoVisibleLista; l++) {
+          let esOculto = $(`#val${cajs[k].val_idDato[l]}`).attr("oc") == "si";
+                  
+          if (!esOculto) {
+            hayUnoVisibleLista = true;
+          }
+        }
+        if (!hayUnoVisibleLista) {
+          // ocultamos el cajetín
+          $(`#valch${cajs[k].caj_num}`).addClass("d-none");
+        } else {
+          // mostramos el cajetín por si estuviera oculto
+          $(`#valch${cajs[k].caj_num}`).removeClass("d-none");
         }
       }
     }
@@ -543,7 +571,7 @@ $(function () {
   });
 });
 
-// Muestra el mensaje por pantalla
+// Quita el mensaje de pantalla
 function treureMsg() {
   $("#msgerr").removeClass("d-block").addClass("d-none");
 }
