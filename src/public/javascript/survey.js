@@ -225,8 +225,9 @@ $(function () {
       // Si es lista de valores se ha debido seleccionar uno
       if (cajs[j].caj_tipo == "CH") {
         var a = $(`#valch${cajs[j].caj_num}`);
+        let oculta = $(`#valch${cajs[j].caj_num}.d-none`).length;
 
-        if (a.html().trim() == a.attr("defecto").trim()) {
+        if (a.html().trim() == a.attr("defecto").trim() && !oculta) {
           msgtxt = idioma == 0 ? "No informat " : "No informado ";
           msgtxt += cajs[j].caj_lit;
         } else {
