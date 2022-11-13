@@ -283,7 +283,7 @@ $(function () {
                       msgtxt +
                       "Mín: " +
                       cajs[j].caj_min +
-                      "  Máx:" +
+                      "  Máx: " +
                       cajs[j].caj_max;
                   }
                 } else {

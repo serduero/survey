@@ -82,7 +82,7 @@ const insForm = (req, res) => {
             preg.num_opciones as  pre_nop,
             preg.observaciones as pre_obs
 
-            from encuesta enc, pregunta preg
+    from encuesta enc, pregunta preg
     where enc.inicio<=${ahora} and enc.fin>=${ahora}
       and enc.activa = 'S'
       and enc.idurl = "${idurl}"
@@ -115,7 +115,7 @@ const insForm = (req, res) => {
       if (actualizar) {
         var i = 0;
         var objeto_ins = new Object();
-        const dato_origen = req.body[1];
+        const dato_origen = req.body[1].substring(0, 100); // Limitamos a 100 por si llega más
         const dato_encuesta = parseInt(datos.id);
 
         // borramos los posibles valores previos si los hubiera
@@ -137,7 +137,7 @@ const insForm = (req, res) => {
                 encuesta: dato_encuesta,
                 pregunta: parseInt(datos.pregunta[i]),
                 numresp: parseInt(datos.respuestas[i]),
-                adicional: datos.txt_adic[i]
+                adicional: datos.txt_adic[i].substring(0, 240)
               };
               
               connection.query(sql, objeto_ins, (error) => {
